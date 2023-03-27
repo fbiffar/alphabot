@@ -7,9 +7,9 @@
 AlphaBot::AlphaBot()
 {  
   //enable fast pwm
-  TCNT0 = 0x00;
   TCCR0A = 0xA3;
   TCCR0B = 0x03;
+  TCNT0 = 0x00;
   OCR0A = 0x00;
   OCR0B = 0x00;
 
@@ -24,103 +24,42 @@ AlphaBot::AlphaBot()
   RMotorBackward = 2;            //Motor-R backward (IN3) A2
  
   DDRC |= (1 << LMotorForward)| (1 << LMotorBackward)| (1 << RMotorForward)| (1 << RMotorBackward); //set to output pins A0-A3 
-  DDRD |=  (1 << LMotorSpeed)| (1 << LMotorSpeed);  // set pin5(ENA) and pin6(ENB) to output
+  
+  DDRD |=  (1 << LMotorSpeed)| (1 << RMotorSpeed);  // set pin5(ENA) and pin6(ENB) to output
 
   PORTC &= 0xF0;
-  PORTD |=  (1 << LMotorSpeed)| (1 << LMotorSpeed); 
-
+  PORTD |=  (1 << LMotorSpeed)| (1 << RMotorSpeed);    
   
-  
-}
-
-
-
-//drive the left motor run forward
-void AlphaBot::LeftMotorForward(unsigned char inLSpeed)
-{
-  //fwd high, bwd low, speed = LSpeed
-  PORTC |= (1 << LMotorForward);
-  PORTC &= ~(1 << LMotorBackward);
-  LMotorSpeedPin = (unsigned char) inLSpeed; ;  //no clue                 
-
-}
-
-//drive the left motor run backward
-void AlphaBot::LeftMotorBackward(unsigned char inLSpeed)
-{
-  //fwd low, bwd high, speed = LSpeed
-  PORTC |= (1 << LMotorBackward);
-  PORTC &= ~(1 << LMotorForward);
-  LMotorSpeedPin = (unsigned char)inLSpeed;  //no clue       
-}
-
-//drive the left motor stop
-void AlphaBot::LeftMotorStop()
-{
-  PORTC &= ~(1 << LMotorSpeedPin);
-  //digitalWrite(LMotorSpeedPin,LOW);               
-}
-
-//drive the right motor run forward
-void AlphaBot::RightMotorForward(unsigned char inRSpeed)
-{
-  RMotorSpeedPin = (unsigned char)inRSpeed;  //no clue             
-  //fwd high, bwd low, speed = LSpeed
-  PORTC |= (1 << RMotorForward);
-  PORTC &= ~(1 << RMotorBackward);
-  
-}
-
-//drive the right motor run backward
-void AlphaBot::RightMotorBackward(unsigned char inRSpeed)
-{
-  RMotorSpeedPin = (unsigned char)inRSpeed;               
-  //fwd low, bwd high, speed = LSpeed
-  PORTC |= (1 << RMotorBackward);
-  PORTC &= ~(1 << RMotorForward);
-}
-
-//drive the right motor stop
-void AlphaBot::RightMotorStop()
-{
-  //digitalWrite(RMotorSpeedPin,LOW);  
-  PORTC &= ~(1 << RMotorSpeedPin);       
 }
 
 //drive logic input speed of left and rigth motor 
-bool AlphaBot::MotorRun(int LS,int RS, int direction)
+void AlphaBot::MotorRun(int LS,int RS, int direction)
 { 
-  if(LS >= 0 && LS <= 255 && direction != 4)
+  if( direction != 4)
   {
-    LeftMotorForward(LS);
+    forward();
+    velocity(LS, RS);
   }
-  if(LS >= 0 && LS <= 255 && direction == 4)
+  else
   {
-    LeftMotorBackward(LS);
+    backward();
+    velocity(LS, RS);
   }
-  
-  if(RS >= 0 && RS <= 255 && direction != 4)
-  {
-    RightMotorForward(RS);
-  }
-  if(RS >= 0 && RS <= 255 && direction == 4)
-  {
-    RightMotorBackward(RS);
-  }
-  if (RS > 255 || RS < 0 || LS > 255 || LS < 0)
-  {
-    return false;
-  }
-  
-  return true;
 }
 
-
-
-//drive the car run forward
-void AlphaBot::Forward(unsigned char Speed)
+void AlphaBot::forward()
 {
-  LeftMotorForward(Speed);
-  RightMotorForward(Speed);
+  PORTC &= 0xF0;
+  PORTC |= 0x06;
 }
 
+void AlphaBot::backward()
+{
+  PORTC &= 0xF0;
+  PORTC |= 0x09;
+}
+void AlphaBot::velocity (int left_motor, int right_motor)
+{
+OCR0A = (unsigned char)left_motor;
+OCR0B = (unsigned char)right_motor;
+}

@@ -11,8 +11,12 @@ class AlphaBot
   public:
   /////////////////////////////////////////////////////////////////
   AlphaBot();
-  bool MotorRun(int LS,int RS, int direction); 
-  void Forward(unsigned char Speed);
+  void MotorRun(int LS,int RS, int direction); 
+  void Forward(int Speed);
+  void forward();
+  void backward();
+  void velocity(int left, int right);
+
   /////////////////////////////////////////////////////////////////
   
   private:
@@ -28,13 +32,7 @@ class AlphaBot
 
   /////////////////////////////////////////////////////////////////
 
-  /////////////////////////////////////////////////////////////////
-  void LeftMotorForward(unsigned char inLSpeed);
-  void LeftMotorBackward(unsigned char inLSpeed);
-  void LeftMotorStop();
-  void RightMotorForward(unsigned char inRSpeed);
-  void RightMotorBackward(unsigned char inRSpeed);
-  void RightMotorStop();
+  ////////////////////////////////////////////////////////////////
 
 };
 #endif

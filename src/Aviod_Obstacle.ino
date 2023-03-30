@@ -84,12 +84,10 @@ int main(int argc, char** argv) {
 
   setup();
   
-  int count = 0;
+
   
 
-  while(count<3){
-    //initialze vectors
-    //int IR_range[5]={0,0,0,0,0};
+  while(1){
     
     //read out sensors
     //IR.read_IR(IR_range, 5);
@@ -162,11 +160,8 @@ int main(int argc, char** argv) {
     //give motorspeeds to robo
     Bot.MotorRun(LS, RS, direction);
     //Serial.print(direction); 
-    delay(10);
+    delay(1000);
 
-    //Bot.MotorRun(0,0,0);
-
-    //count++;
 
 
   }

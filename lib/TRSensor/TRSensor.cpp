@@ -11,14 +11,14 @@ TRSensor::TRSensor()
 
   _numSensors = 5;
 
-  calibratedMin = (unsigned int*)malloc(sizeof(unsigned int) * _numSensors);
-	calibratedMax = (unsigned int*)malloc(sizeof(unsigned int) * _numSensors);
+  // calibratedMin = (unsigned int*)malloc(sizeof(unsigned int) * _numSensors);
+	// calibratedMax = (unsigned int*)malloc(sizeof(unsigned int) * _numSensors);
 	
-	for(int i=0;i<_numSensors;i++)
-	{
-		calibratedMin[i] = 1023;
-		calibratedMax[i] = 0;
-	}
+	// for(int i=0;i<_numSensors;i++)
+	// {
+	// 	calibratedMin[i] = 1023;
+	// 	calibratedMax[i] = 0;
+	// }
 
   DDRB |= (1 << Address) | (1 << CS) | (1 << Clock);
   PORTB &= ~(1 << Clock);//set clock to 0 
@@ -122,7 +122,7 @@ void TRSensor::read_sensors(unsigned int* sensorValues, unsigned int* TR_min, un
 //   }
 // }
 
-void TRSensor::read_sensors_calibration(unsigned int* sensorValues)
+void TRSensor::read_sensors_calibration(unsigned int sensorValues[])
 {
 
   int i,j;

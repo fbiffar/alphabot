@@ -24,8 +24,8 @@ class TRSensor
   int DataOut ;
   int CS ;
   int _numSensors;
-  unsigned int *calibratedMin;
-	unsigned int *calibratedMax;
+  // unsigned int *calibratedMin;
+	// unsigned int *calibratedMax;
 
 
   

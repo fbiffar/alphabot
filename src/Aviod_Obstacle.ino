@@ -27,9 +27,9 @@ float d_encoder_steps_right;
 
 
 //PID Controller
-float Kp = 5;
-float Kd = 1;
-float Ki = 0;
+float Kp = 30;
+float Kd = 25;
+float Ki = 0.05;
 
 //TR Sensor Tuning
 float outer_sensors_weight = 2; 
@@ -37,10 +37,10 @@ unsigned int TR_sensor[5]={0,0,0,0,0};
 
 
 //black line = false or white line = true 
-int white_line = 0; 
+int white_line = 1; 
 
 //tuning motor
-float backward_factor = 0.1;
+float backward_factor = 0.26;
 float basespeed_left = 100;
 float basespeed_right = 100;
 float motorspeed_left_max = 200;
@@ -58,8 +58,8 @@ float left_turn_slow_right = 0.25;
 float turn_right_end_right = 0.1;
 
 //line thresholds 
-float line_threshold_white = 50.0;
-float line_threshold_black = 50.0; 
+float line_threshold_white = 70.0;
+float line_threshold_black = 60.0; 
 
 //waiting time 
 float stop_threshold = 100;
@@ -162,7 +162,7 @@ int main(int argc, char** argv) {
     //give motorspeeds to robo
     Bot.MotorRun(LS, RS, direction);
     //Serial.print(direction); 
-    
+    delay(10);
 
     //Bot.MotorRun(0,0,0);
 

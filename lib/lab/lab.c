@@ -1,4 +1,4 @@
-/* --- Generated the 30/3/2023 at 12:25 --- */
+/* --- Generated the 30/3/2023 at 13:52 --- */
 /* --- heptagon compiler, version 1.05.00 (compiled thu. jan. 12 12:27:5 CET 2023) --- */
 /* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab.ept --- */
 
@@ -470,8 +470,8 @@ void Lab__controller_step(float l2, float l1, float m, float r1, float r2,
           } else {
             v_107 = v_106;
           };
-          v_104 = (r-l);
-          v_103 = (l-r);
+          v_104 = (l-r);
+          v_103 = (r-l);
           if (white_line) {
             error = v_103;
           } else {

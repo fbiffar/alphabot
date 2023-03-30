@@ -1,0 +1,220 @@
+type stateName = OnLine | LostLine | ObstacleFollowing | Error | Turn90Right | MoveAway | MoveCloser | LeftTurn | RightTurn | LeftTurnSlow | RightTurnSlow | MoveForward | TurnRightEnd
+
+(*  l2, l1, m, r1 ,r2 are the 5  white line sensors, 0-4 = black, >7 = white *)
+(*  ir_front:    0° staight to driving direction
+    ir_left_f1: 90° to the left, on the front, short  distance
+    ir_left_f2: 90° to the left, on the front, longer distance
+    ir_left_b1: 90° to the left, on the back,  short  distance
+    ir_left_b2: 90° to the left, on the back,  longer distance
+    false = closer than the threshold, true = further than the threshold *)
+(*  outer_sensor_weight weighs the preference of the outer white-line-sensors over the inner white-line-sensors *)
+(*  backward_factor is the factor of how slow the robot drives back when the line is lost: 0 = min_speed, 1 = max_speed *)
+(*  basespeed is the standard speed for driving forward *)
+(*  motorspeed_min and motorspeed_max define the maximal and minimal speed of each wheel *)
+(*  kP, kI, kD are the constants for the PID controller which controls the forward movement *)
+(*  d_encoder_steps are the amount of encoder steps between two cycles *)
+(*  white_line is true if the line is white and the background black *)
+(*  the line_thresholds are the bordrs for which TR-sensor inputs are considered as black or white *)
+(*  stop_threshold is the threshhold how long the robot has to wait if he hits a object *)
+node controller(l2, l1, m, r1, r2: float;
+                ir_front, ir_left_f1, ir_left_f2, ir_left_b1, ir_left_b2 : bool;
+                outer_sensor_weight: float;
+                backward_factor: float;
+                basespeed_left, basespeed_right: float;
+                motorspeed_left_max, motorspeed_left_min, motorspeed_right_max, motorspeed_right_min: float;
+                kP, kI, kD: float;
+                d_encoder_steps_left, d_encoder_steps_right: float;
+                white_line: bool;
+                line_threshold_white, line_threshold_black: float;  (* over line_threshold is the white line lost *)
+                stop_threshold: float;
+                move_away_right, move_closer_left, right_turn_left, left_turn_right, right_turn_slow_left, left_turn_slow_right, turn_right_end_right: float)
+                returns (left_wheel, right_wheel: float; direction: int; st: stateName)
+    var 
+        last left_line: bool;
+        last left_m: bool;
+        last alligned:bool;
+        last r:float;
+        last l:float;
+    let
+        (* check variable whether robot left white line *)
+        left_line = if white_line
+                    then (l2 <. line_threshold_white) and (l1 <. line_threshold_white) and (m <. line_threshold_white) and (r1 <. line_threshold_white) and (r2 <. line_threshold_white)
+                    else (l2 >. line_threshold_black) and (l1 >. line_threshold_black) and (m >. line_threshold_black) and (r1 >. line_threshold_black) and (r2 >. line_threshold_black);
+        (* check variable whether robot left white line *)
+        left_m = if white_line then (m <. line_threshold_white) else (m >. line_threshold_black);
+        (* check variable whether robot is again on the white line *)
+        alligned  = if white_line
+                    then (l1 >. line_threshold_white) or (m >. line_threshold_white) or (r1 >. line_threshold_white)
+                    else (l1 <. line_threshold_black) or (m <. line_threshold_black) or (r1 <. line_threshold_black);
+        r = r1 +. outer_sensor_weight *. r2; (* weighted right sensors *)
+        l = l1 +. outer_sensor_weight *. l2; (* weighted left  sensors *)
+        
+        automaton 
+            state LineFollow
+                do
+
+                automaton
+                    state OnLine
+                        var
+                            error, p, i, d, correction: float;
+                        do (* normal line following proccedure with PID control*)
+                            error = if white_line then (r -. l) else (l -. r);
+                            p = error; 
+                            i = 0.0 -> (pre(i) +. error);
+                            d = error -> (error -. pre(error)); 
+                            correction = p*.kP +. i*.kI +. d*.kD; 
+
+                            st          = OnLine;
+                            direction   = 1;
+                            left_wheel  = if correction >. (motorspeed_left_max -. basespeed_left)
+                                          then motorspeed_left_max
+                                          else (if correction <. (motorspeed_left_min -. basespeed_left)
+                                          then motorspeed_left_min
+                                          else basespeed_left +. correction);
+                            right_wheel = if correction >. (basespeed_right -. motorspeed_right_min)
+                                          then motorspeed_right_min
+                                          else (if correction <. (basespeed_right -. motorspeed_right_max)
+                                          then motorspeed_right_max
+                                          else basespeed_right -. correction);
+                        unless left_line then LostLine
+                    state LostLine
+                        do (* failstate: try to move robot back to line *)
+                            st          = LostLine;
+                            direction   = 4;
+                            left_wheel  = motorspeed_left_min  +. (motorspeed_left_max  -. motorspeed_left_min)  *. backward_factor;
+                            right_wheel = motorspeed_right_min +. (motorspeed_right_max -. motorspeed_right_min) *. backward_factor;
+                    unless not left_m then OnLine
+                end
+            (* change state if robot detects an obstale in front *)
+            unless not ir_front then ObstacleFollowing
+
+            state ObstacleFollowing
+                var
+                    counter: float;
+                do  
+                    counter     = 0.0 -> pre(counter) +. 1.0;
+                    st          = ObstacleFollowing;
+                    direction   = 0;
+                    left_wheel  = motorspeed_left_min;
+                    right_wheel = motorspeed_right_min;
+            until counter >=. stop_threshold and not ir_front then WallFollowing
+            | ir_front then LineFollow
+
+
+            state WallFollowing 
+                var
+                    front_free, left_front_too_close, left_front_too_far, left_back_too_close, left_back_too_far, left_front_correct, left_back_correct: bool;
+
+                do  
+                    front_free           = not ir_front;
+                    left_front_too_close = not ir_left_f1; (* and not ir_left_f2 *)
+                    left_front_too_far   = ir_left_f2;     (* and ir_left_f1 *)
+                    left_front_correct   = not left_front_too_close and not left_front_too_far;
+                    left_back_too_close  = not ir_left_b1; (* and not ir_left_b2 *)
+                    left_back_too_far    = ir_left_b2;     (* and ir_left_b1 *)
+                    left_back_correct    = not left_back_too_close and not left_back_too_far;
+
+                automaton
+
+                    state CheckState
+                        do (* nothing *)    
+                            st = Error;
+                            direction   = 0;
+                            left_wheel  = motorspeed_left_min;
+                            right_wheel = motorspeed_right_min;
+                    unless not front_free                          then Turn90Right
+                    | left_front_too_close and left_back_too_close then MoveAway
+                    | left_front_too_close and left_back_too_far   then RightTurn
+                    | left_front_too_far   and left_back_too_close then LeftTurn
+                    | left_front_too_far   and left_back_too_far   then MoveCloser
+                    | left_front_correct   and left_back_too_close then LeftTurnSlow
+                    | left_front_correct   and left_back_too_far   then RightTurnSlow
+                    | left_front_too_close and left_back_correct   then RightTurnSlow
+                    | left_front_too_far   and left_back_correct   then LeftTurnSlow
+                    | left_front_correct   and left_back_correct   then MoveForward
+
+                    
+                    state Turn90Right 
+                        var
+                            sum_encoder_steps_left:  float;
+                            finished_turn: bool;
+                        do (* turn 90° on the right wheel*)
+                            sum_encoder_steps_left  = 0.0 -> pre(sum_encoder_steps_left) +. d_encoder_steps_left;
+                            (* distance for 90° curve = 2*pi/4 * 130mm = 204.2mm *)
+                            (* distance of a wheel = (2pi*30mm÷20) * sum_encoder_steps_left *)
+                            (*     204.2 < 9.425 * sum_encoder_steps_left *)
+                            (* <=> 20 < sum_encoder_steps_left *)
+                            finished_turn = 204.2 <. (9.425 *. sum_encoder_steps_left);
+                            st            = Turn90Right;
+                            direction     = 3;
+                            left_wheel    = motorspeed_left_max;
+                            right_wheel   = motorspeed_right_min;
+                    until finished_turn then CheckState
+
+                    state MoveAway
+                        do (* turn right with left larger fwd movement *)
+                            st = MoveAway;
+                            direction   = 3;
+                            left_wheel  = basespeed_left;
+                            right_wheel = motorspeed_right_min +. (basespeed_right -. motorspeed_right_min) *. move_away_right;
+                    until true then CheckState
+
+                    state MoveCloser
+                        do (* turn left with right larger fwd movement *)
+                            st = MoveCloser;
+                            direction   = 2;
+                            left_wheel  = motorspeed_left_min +. (basespeed_left -. motorspeed_left_min) *. move_closer_left;
+                            right_wheel = basespeed_right;
+                    until true then CheckState
+
+                    state RightTurn
+                        do (* turn right with left larger fwd movement *)
+                            st = RightTurn;
+                            direction   = 3;
+                            left_wheel  = motorspeed_left_min +. (motorspeed_left_max -. motorspeed_left_min) *. right_turn_left;
+                            right_wheel = motorspeed_right_min;
+                    until true then CheckState
+
+                    state LeftTurn
+                        do (* turn left with right larger fwd movement *)
+                            st = LeftTurn;
+                            direction   = 2;
+                            left_wheel  = motorspeed_left_min;
+                            right_wheel = motorspeed_right_min +. (motorspeed_right_max -. motorspeed_right_min) *. left_turn_right;
+                    until true then CheckState
+
+                    state RightTurnSlow
+                        do (* turn right with left slightly larger fwd movement *)
+                            st = RightTurn;
+                            direction   = 3;
+                            left_wheel  = motorspeed_left_min +. (motorspeed_left_max -. motorspeed_left_min) *. right_turn_slow_left;
+                            right_wheel = motorspeed_right_min;
+                    until true then CheckState
+
+                    state LeftTurnSlow
+                        do (* turn left with right slightly larger fwd movement *)
+                            st = LeftTurn;
+                            direction   = 2;
+                            left_wheel  = motorspeed_left_min;
+                            right_wheel = motorspeed_right_min +. (motorspeed_right_max -. motorspeed_right_min) *. left_turn_slow_right;
+                    until true then CheckState
+
+                    state MoveForward
+                        do (* drive forward *)
+                            st = MoveForward;
+                            direction   = 1;
+                            left_wheel  = basespeed_left;
+                            right_wheel = basespeed_right;
+                    until true then CheckState
+                end
+            until not left_line then TurnRightEnd 
+
+            state TurnRightEnd
+                do (* turn right until robot is alligned with line *)
+                    st = TurnRightEnd;
+                    direction   = 3;
+                    left_wheel  = basespeed_left;
+                    right_wheel = motorspeed_right_min +. (basespeed_right -. motorspeed_left_min) *. turn_right_end_right;
+            unless alligned then LineFollow
+        end
+    tel

@@ -8,31 +8,52 @@ InfraRed IR;
 TRSensor TR;
 AlphaBot Bot;
 Encoder Enc; 
+
 //Encoder 
+int prev_encoder_left = 0;
+int prev_encoder_right = 0;
 int steps_left = 0;
 int steps_right = 0;
-int prev_steps_left = 0;
-int prev_steps_right = 0;
+float d_encoder_steps_left;
+float d_encoder_steps_right;
+
+
+
 //PID Controller
 float Kp;
 float Kd;
 float Ki;
-//motor constants
-float max_speed_left;
-float max_speed_right;
-float min_speed_left;
-float min_speed_right;
-float base_speed_left;
-float base_speed_right; 
-float backwards;
+
 //TR Sensor Tuning
-float outer_sensors; 
-int TR_max[5];
-int TR_min[5];
+float outer_sensors_weight; 
+
 //black line = false or white line = true 
-bool bw; 
+bool white_line; 
 
+//tuning motor
+float backward_factor = 0.2;
+float basespeed_left = 100;
+float basespeed_right = 100;
+float motorspeed_left_max = 200;
+float motorspeed_left_min = 0;
+float motorspeed_right_max = 200;
+float motorspeed_right_min = 0; 
+float move_away_right = 0.5;
+float move_closer_left = 0.5;
+float right_turn_left = 0.5;
+float left_turn_right = 0.5;
+float right_turn_slow_left = 0.25;
+float left_turn_slow_right = 0.25;
+float turn_right_end_right = 0.1;
 
+//line thresholds 
+float line_threshold_white = 7.0;
+float line_threshold_black = 4.0; 
+
+//waiting time 
+float stop_threshold = 100;
+
+  
 
 
 
@@ -57,17 +78,17 @@ int main(int argc, char** argv) {
     int TR_sensor[5]={0,0,0,0,0};
     
     //read out sensors
-    IR.read_IR(IR_range, 5);
+    //IR.read_IR(IR_range, 5);
     TR.read_sensors_calibration(TR_sensor);
 
     //print results 
-    for(int i = 0;i < 5;i++)
-    {
-      Serial.print(IR_range[i]);
-      Serial.print("\t");
+    // for(int i = 0;i < 5;i++)
+    // {
+    //   Serial.print(IR_range[i]);
+    //   Serial.print("\t");
     
-    }
-    Serial.print("\n");
+    // }
+    // Serial.print("\n");
 
     for(int i = 0;i < 5;i++)
     {
@@ -77,11 +98,17 @@ int main(int argc, char** argv) {
     }
     Serial.print("\n");
 
+    //get encoder values
+    d_encoder_steps_left = steps_left - prev_encoder_left;
+    d_encoder_steps_right = steps_right - prev_encoder_right;
+    prev_encoder_left = steps_left;
+    prev_encoder_right = steps_right;
+
     //run heptagon code 
 
 
     //give motorspeeds to robo
-    //Bot.MotorRun((int)LS,(int)RS, (int)direction);
+    Bot.MotorRun((int)LS,(int)RS, (int)direction);
 
 
   }

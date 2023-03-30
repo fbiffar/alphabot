@@ -1,4 +1,4 @@
-/* --- Generated the 30/3/2023 at 13:52 --- */
+/* --- Generated the 30/3/2023 at 15:58 --- */
 /* --- heptagon compiler, version 1.05.00 (compiled thu. jan. 12 12:27:5 CET 2023) --- */
 /* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab.ept --- */
 
@@ -324,14 +324,14 @@ void Lab__controller_step(float l2, float l1, float m, float r1, float r2,
   l = (l1+v_31);
   v_30 = (outer_sensor_weight*r2);
   r = (r1+v_30);
-  v_28 = (r1>line_threshold_black);
-  v_26 = (m>line_threshold_black);
-  v_25 = (l1>line_threshold_black);
+  v_28 = (r1<line_threshold_black);
+  v_26 = (m<line_threshold_black);
+  v_25 = (l1<line_threshold_black);
   v_27 = (v_25||v_26);
   v_29 = (v_27||v_28);
-  v_23 = (r1<line_threshold_white);
-  v_21 = (m<line_threshold_white);
-  v_20 = (l1<line_threshold_white);
+  v_23 = (r1>line_threshold_white);
+  v_21 = (m>line_threshold_white);
+  v_20 = (l1>line_threshold_white);
   v_22 = (v_20||v_21);
   v_24 = (v_22||v_23);
   if (white_line) {
@@ -339,27 +339,27 @@ void Lab__controller_step(float l2, float l1, float m, float r1, float r2,
   } else {
     alligned = v_29;
   };
-  v_19 = (m<line_threshold_black);
-  v_18 = (m>line_threshold_white);
+  v_19 = (m>line_threshold_black);
+  v_18 = (m<line_threshold_white);
   if (white_line) {
     left_m = v_18;
   } else {
     left_m = v_19;
   };
-  v_16 = (r2<line_threshold_black);
-  v_14 = (r1<line_threshold_black);
-  v_12 = (m<line_threshold_black);
-  v_10 = (l1<line_threshold_black);
-  v_9 = (l2<line_threshold_black);
+  v_16 = (r2>line_threshold_black);
+  v_14 = (r1>line_threshold_black);
+  v_12 = (m>line_threshold_black);
+  v_10 = (l1>line_threshold_black);
+  v_9 = (l2>line_threshold_black);
   v_11 = (v_9&&v_10);
   v_13 = (v_11&&v_12);
   v_15 = (v_13&&v_14);
   v_17 = (v_15&&v_16);
-  v_7 = (r2>line_threshold_white);
-  v_5 = (r1>line_threshold_white);
-  v_3 = (m>line_threshold_white);
-  v_1 = (l1>line_threshold_white);
-  v = (l2>line_threshold_white);
+  v_7 = (r2<line_threshold_white);
+  v_5 = (r1<line_threshold_white);
+  v_3 = (m<line_threshold_white);
+  v_1 = (l1<line_threshold_white);
+  v = (l2<line_threshold_white);
   v_2 = (v&&v_1);
   v_4 = (v_2&&v_3);
   v_6 = (v_4&&v_5);

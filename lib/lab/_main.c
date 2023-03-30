@@ -1,13 +1,13 @@
-/* --- Generated the 30/3/2023 at 11:51 --- */
+/* --- Generated the 30/3/2023 at 12:25 --- */
 /* --- heptagon compiler, version 1.05.00 (compiled thu. jan. 12 12:27:5 CET 2023) --- */
-/* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab_V2.ept --- */
+/* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab.ept --- */
 
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "_main.h"
 
-Lab_V2__controller_mem mem;
+Lab__controller_mem mem;
 int main(int argc, char** argv) {
   int step_c;
   int step_max;
@@ -45,14 +45,14 @@ int main(int argc, char** argv) {
   float right_turn_slow_left;
   float left_turn_slow_right;
   float turn_right_end_right;
-  Lab_V2__controller_out _res;
+  Lab__controller_out _res;
   char buf_3[20];
   step_c = 0;
   step_max = 0;
   if ((argc==2)) {
     step_max = atoi(argv[1]);
   };
-  Lab_V2__controller_reset(&mem);
+  Lab__controller_reset(&mem);
   while ((!(step_max)||(step_c<step_max))) {
     step_c = (step_c+1);
     
@@ -191,24 +191,22 @@ int main(int argc, char** argv) {
     if ((scanf("%f", &turn_right_end_right)==EOF)) {
       return 0;
     };;
-    Lab_V2__controller_step(l2, l1, m, r1, r2, ir_front, ir_left_f1,
-                            ir_left_f2, ir_left_b1, ir_left_b2,
-                            outer_sensor_weight, backward_factor,
-                            basespeed_left, basespeed_right,
-                            motorspeed_left_max, motorspeed_left_min,
-                            motorspeed_right_max, motorspeed_right_min, kP,
-                            kI, kD, d_encoder_steps_left,
-                            d_encoder_steps_right, white_line,
-                            line_threshold_white, line_threshold_black,
-                            stop_threshold, move_away_right,
-                            move_closer_left, right_turn_left,
-                            left_turn_right, right_turn_slow_left,
-                            left_turn_slow_right, turn_right_end_right,
-                            &_res, &mem);
+    Lab__controller_step(l2, l1, m, r1, r2, ir_front, ir_left_f1, ir_left_f2,
+                         ir_left_b1, ir_left_b2, outer_sensor_weight,
+                         backward_factor, basespeed_left, basespeed_right,
+                         motorspeed_left_max, motorspeed_left_min,
+                         motorspeed_right_max, motorspeed_right_min, kP, kI,
+                         kD, d_encoder_steps_left, d_encoder_steps_right,
+                         white_line, line_threshold_white,
+                         line_threshold_black, stop_threshold,
+                         move_away_right, move_closer_left, right_turn_left,
+                         left_turn_right, right_turn_slow_left,
+                         left_turn_slow_right, turn_right_end_right, &_res,
+                         &mem);
     printf("%f\n", _res.left_wheel);
     printf("%f\n", _res.right_wheel);
     printf("%d\n", _res.direction);
-    printf("%s\n", string_of_Lab_V2__stateName(_res.st, buf_3));
+    printf("%s\n", string_of_Lab__stateName(_res.st, buf_3));
     fflush(stdout);
   };
   return 0;

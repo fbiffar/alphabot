@@ -2,8 +2,8 @@
 #include <TRSensor.h>
 #include <AlphaBotC.h>
 #include <Encoder.h>
-#include <lab_V2.c>
-#include <lab_V2_types.h>
+#include <lab.c>
+#include <lab_types.h>
 
 //sensors 
 InfraRed IR;
@@ -12,8 +12,8 @@ AlphaBot Bot;
 Encoder Enc; 
 
 //controller
-Lab_V2__controller_out _out;
-Lab_V2__controller_mem mem;
+Lab__controller_out _out;
+Lab__controller_mem mem;
 
 
 //Encoder 
@@ -56,8 +56,8 @@ float left_turn_slow_right = 0.25;
 float turn_right_end_right = 0.1;
 
 //line thresholds 
-float line_threshold_white = 6.0;
-float line_threshold_black = 4.0; 
+float line_threshold_white = 5.0;
+float line_threshold_black = 5.0; 
 
 //waiting time 
 float stop_threshold = 100;
@@ -71,7 +71,7 @@ void setup(){
     //Initialize sensors 
     Serial.begin(115200);
     Serial.print("setup\n");
-    Lab_V2__controller_reset(&mem);
+    Lab__controller_reset(&mem);
     IR = InfraRed();
     TR = TRSensor();
     Bot = AlphaBot();
@@ -118,7 +118,7 @@ int main(int argc, char** argv) {
     prev_encoder_right = steps_right;
 
     //run heptagon code 
-    Lab_V2__controller_step((float) TR_sensor[0],(float) TR_sensor[1], (float) TR_sensor[2], (float) TR_sensor[3],(float) TR_sensor[4],           // (float l2, float l1, float m, float r1, float r2,
+    Lab__controller_step((float) TR_sensor[0],(float) TR_sensor[1], (float) TR_sensor[2], (float) TR_sensor[3],(float) TR_sensor[4],           // (float l2, float l1, float m, float r1, float r2,
     //Lab_V2__controller_step(7.0, 7.0, 7.0, 7.0, 4.0,           // (float l2, float l1, float m, float r1, float r2,
                             1,1,1,1,1,                                                                      // int ir_front, int ir_left_f1, int ir_left_f2,int ir_left_b1, int ir_left_b2,
                             outer_sensors_weight,

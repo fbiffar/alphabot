@@ -164,7 +164,7 @@ void TRSensor::read_sensors_calibration(unsigned int sensorValues[])
   for(i = 0;i < _numSensors;i++)
   {
    
-    sensorValues[i] =(int)(values[i+1]/100.0 +0.5);
+    sensorValues[i] =(int)(values[i+1]/10.0 +0.5);
   }
 
 }

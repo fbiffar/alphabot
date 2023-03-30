@@ -27,8 +27,8 @@ float d_encoder_steps_right;
 
 
 //PID Controller
-float Kp = 2;
-float Kd = 0;
+float Kp = 5;
+float Kd = 1;
 float Ki = 0;
 
 //TR Sensor Tuning
@@ -40,13 +40,15 @@ unsigned int TR_sensor[5]={0,0,0,0,0};
 int white_line = 0; 
 
 //tuning motor
-float backward_factor = 0.2;
-float basespeed_left = 50;
-float basespeed_right = 50;
-float motorspeed_left_max = 2*basespeed_left;
-float motorspeed_left_min = 0;
-float motorspeed_right_max = 2*basespeed_right;
-float motorspeed_right_min = 0; 
+float backward_factor = 0.1;
+float basespeed_left = 100;
+float basespeed_right = 100;
+float motorspeed_left_max = 200;
+float motorspeed_left_min = 60;
+float motorspeed_right_max = 200;
+float motorspeed_right_min = 60; 
+
+//obstacle avoidance
 float move_away_right = 0.5;
 float move_closer_left = 0.5;
 float right_turn_left = 0.5;
@@ -56,8 +58,8 @@ float left_turn_slow_right = 0.25;
 float turn_right_end_right = 0.1;
 
 //line thresholds 
-float line_threshold_white = 5.0;
-float line_threshold_black = 5.0; 
+float line_threshold_white = 50.0;
+float line_threshold_black = 50.0; 
 
 //waiting time 
 float stop_threshold = 100;
@@ -102,14 +104,14 @@ int main(int argc, char** argv) {
     // }
     // Serial.print("\n");
 
-    // Serial.print("\t");
-    // for(int i = 0;i < 5;i++)
-    // {
-    //   Serial.print(TR_sensor[i]);
-    //   Serial.print("\t");
+    Serial.print("\t");
+    for(int i = 0;i < 5;i++)
+    {
+      Serial.print(TR_sensor[i]);
+      Serial.print("\t");
     
-    // }
-    // Serial.print("\n");
+    }
+    Serial.print("\n");
 
     //get encoder values
     d_encoder_steps_left = steps_left - prev_encoder_left;
@@ -146,20 +148,22 @@ int main(int argc, char** argv) {
     int direction = _out.direction; 
 
     
-    Serial.print(LS);
-    Serial.print("\t");                       
-    Serial.print(RS); 
-    Serial.print("\t");                       
-    Serial.print(direction); 
-    Serial.print("\t");                       
-    // Serial.print(_out -> st);  
-    Serial.print("\n");                       
+    // Serial.print(LS);
+    // Serial.print("\t");                       
+    // Serial.print(RS); 
+    // Serial.print("\t");                    
+    // Serial.print(direction); 
+    // Serial.print("\t");                       
+    // // // Serial.print(_out -> st);  
+    // Serial.print("\n");                       
                                           
                                  
 
     //give motorspeeds to robo
-    Bot.MotorRun((int)LS,(int)RS, (int)direction);
-    delay(100);
+    Bot.MotorRun(LS, RS, direction);
+    //Serial.print(direction); 
+    
+
     //Bot.MotorRun(0,0,0);
 
     //count++;

@@ -26,6 +26,7 @@ node controller(l2, l1, m, r1, r2: float;
                 d_encoder_steps_left, d_encoder_steps_right: float;
                 white_line: bool;
                 line_threshold_white, line_threshold_black: float;  (* over line_threshold is the white line lost *)
+                (* to_black_threshold, to_white_threshold: float; *)
                 stop_threshold: float;
                 move_away_right, move_closer_left, right_turn_left, left_turn_right, right_turn_slow_left, left_turn_slow_right, turn_right_end_right: float)
                 returns (left_wheel, right_wheel: float; direction: int; st: stateName)
@@ -76,6 +77,8 @@ node controller(l2, l1, m, r1, r2: float;
                                           else (if correction <. (basespeed_right -. motorspeed_right_max)
                                           then motorspeed_right_max
                                           else basespeed_right -. correction);
+                            (*white_line = if (r2+l2)/2 > to_black_threshold and m > line_threshold_white then false else pre(white_line)*)
+                            (*white_line = if (r2+l2)/2 < to_white_threshold and m < line_threshold_black then true else pre(white_line)*)
                         unless left_line then LostLine
                     state LostLine
                         do (* failstate: try to move robot back to line *)

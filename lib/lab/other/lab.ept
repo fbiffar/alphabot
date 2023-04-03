@@ -61,7 +61,7 @@ node controller(l2, l1, m, r1, r2: float;
                         do (* normal line following proccedure with PID control*)
                             error = if white_line then (r -. l) else (l -. r);
                             p = error; 
-                            i = 0.0 -> (pre(i) +. error);
+                            i = error -> (pre(i) +. error);
                             d = error -> (error -. pre(error)); 
                             correction = p*.kP +. i*.kI +. d*.kD; 
 

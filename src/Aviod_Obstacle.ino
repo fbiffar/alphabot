@@ -5,18 +5,17 @@
 #include <lab.c>
 #include <lab_types.h>
 
-//sensors 
+// sensors
 InfraRed IR;
 TRSensor TR;
 AlphaBot Bot;
-Encoder Enc; 
+Encoder Enc;
 
-//controller
+// controller
 Lab__controller_out _out;
 Lab__controller_mem mem;
 
-
-//Encoder 
+// Encoder
 int prev_encoder_left = 0;
 int prev_encoder_right = 0;
 int steps_left = 0;
@@ -24,31 +23,29 @@ int steps_right = 0;
 float d_encoder_steps_left;
 float d_encoder_steps_right;
 
-
-
-//PID Controller
+// PID Controller
 float Kp = 30;
 float Kd = 25;
 float Ki = 0.05;
 
-//TR Sensor Tuning
-float outer_sensors_weight = 2; 
-unsigned int TR_sensor[5]={0,0,0,0,0};
+// TR Sensor Tuning
+float outer_sensors_weight = 2;
+unsigned int TR_sensor[5] = {0, 0, 0, 0, 0};
+unsigned int IR_range[5] = {0, 0, 0, 0, 0};
 
+// black line = false or white line = true
+int white_line = 1;
 
-//black line = false or white line = true 
-int white_line = 1; 
-
-//tuning motor
+// tuning motor
 float backward_factor = 0.26;
 float basespeed_left = 100;
 float basespeed_right = 100;
 float motorspeed_left_max = 200;
 float motorspeed_left_min = 60;
 float motorspeed_right_max = 200;
-float motorspeed_right_min = 60; 
+float motorspeed_right_min = 60;
 
-//obstacle avoidance
+// obstacle avoidance
 float move_away_right = 0.5;
 float move_closer_left = 0.5;
 float right_turn_left = 0.5;
@@ -57,125 +54,107 @@ float right_turn_slow_left = 0.25;
 float left_turn_slow_right = 0.25;
 float turn_right_end_right = 0.1;
 
-//line thresholds 
+// line thresholds
 float line_threshold_white = 70.0;
-float line_threshold_black = 60.0; 
+float line_threshold_black = 60.0;
 
-//waiting time 
+// waiting time
 float stop_threshold = 100;
 
-  
-
-
-
-
-void setup(){ 
-    //Initialize sensors 
-    Serial.begin(115200);
-    Serial.print("setup\n");
-    Lab__controller_reset(&mem);
-    IR = InfraRed();
-    TR = TRSensor();
-    Bot = AlphaBot();
-    Enc = Encoder();
+void setup()
+{
+  // Initialize sensors
+  Serial.begin(115200);
+  Serial.print("setup\n");
+  Lab__controller_reset(&mem);
+  IR = InfraRed();
+  TR = TRSensor();
+  Bot = AlphaBot();
+  Enc = Encoder();
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv)
+{
 
   setup();
-  
 
-  
+  while (1)
+  {
 
-  while(1){
-    
-    //read out sensors
-    //IR.read_IR(IR_range, 5);
-    TR.read_sensors_calibration(TR_sensor);
-    
-    //print results 
-    // for(int i = 0;i < 5;i++)
-    // {
-    //   Serial.print(IR_range[i]);
-    //   Serial.print("\t");
-    
-    // }
-    // Serial.print("\n");
+    // read out sensors
+    IR.read_IR(IR_range, 5);
+    // TR.read_sensors_calibration(TR_sensor);
 
-    Serial.print("\t");
-    for(int i = 0;i < 5;i++)
+    // print results
+    for (int i = 0; i < 5; i++)
     {
-      Serial.print(TR_sensor[i]);
+      Serial.print(IR_range[i]);
       Serial.print("\t");
-    
     }
     Serial.print("\n");
 
-    //get encoder values
-    d_encoder_steps_left = steps_left - prev_encoder_left;
-    d_encoder_steps_right = steps_right - prev_encoder_right;
-    prev_encoder_left = steps_left;
-    prev_encoder_right = steps_right;
+    // Serial.print("\t");
+    // for (int i = 0; i < 5; i++)
+    // {
+    //   Serial.print(TR_sensor[i]);
+    //   Serial.print("\t");
+    // }
+    // Serial.print("\n");
 
-    //run heptagon code 
-    Lab__controller_step((float) TR_sensor[0],(float) TR_sensor[1], (float) TR_sensor[2], (float) TR_sensor[3],(float) TR_sensor[4],           // (float l2, float l1, float m, float r1, float r2,
-    //Lab_V2__controller_step(7.0, 7.0, 7.0, 7.0, 4.0,           // (float l2, float l1, float m, float r1, float r2,
-                            1,1,1,1,1,                                                                      // int ir_front, int ir_left_f1, int ir_left_f2,int ir_left_b1, int ir_left_b2,
-                            outer_sensors_weight,
-                            backward_factor, basespeed_left, basespeed_right, 
-                            motorspeed_left_max, motorspeed_left_min,
-                            motorspeed_right_max, motorspeed_right_min,
-                            Kp, Ki, Kd,
-                            d_encoder_steps_left, d_encoder_steps_right,
-                            white_line, line_threshold_white, line_threshold_black, stop_threshold,
-                            move_away_right, 
-                            move_closer_left,
-                            right_turn_left,
-                            left_turn_right,
-                            right_turn_slow_left,
-                            left_turn_slow_right,
-                            turn_right_end_right, 
-                            &_out,
-                            &mem
-                            );      
+    // // get encoder values
+    // d_encoder_steps_left = steps_left - prev_encoder_left;
+    // d_encoder_steps_right = steps_right - prev_encoder_right;
+    // prev_encoder_left = steps_left;
+    // prev_encoder_right = steps_right;
 
+    // // run heptagon code
+    // Lab__controller_step((float)TR_sensor[0], (float)TR_sensor[1], (float)TR_sensor[2], (float)TR_sensor[3], (float)TR_sensor[4], // (float l2, float l1, float m, float r1, float r2,
+    //                                                                                                                               // Lab_V2__controller_step(7.0, 7.0, 7.0, 7.0, 4.0,           // (float l2, float l1, float m, float r1, float r2,
+    //                      1, 1, 1, 1, 1,                                                                                           // int ir_front, int ir_left_f1, int ir_left_f2,int ir_left_b1, int ir_left_b2,
+    //                      outer_sensors_weight,
+    //                      backward_factor, basespeed_left, basespeed_right,
+    //                      motorspeed_left_max, motorspeed_left_min,
+    //                      motorspeed_right_max, motorspeed_right_min,
+    //                      Kp, Ki, Kd,
+    //                      d_encoder_steps_left, d_encoder_steps_right,
+    //                      white_line, line_threshold_white, line_threshold_black, stop_threshold,
+    //                      move_away_right,
+    //                      move_closer_left,
+    //                      right_turn_left,
+    //                      left_turn_right,
+    //                      right_turn_slow_left,
+    //                      left_turn_slow_right,
+    //                      turn_right_end_right,
+    //                      &_out,
+    //                      &mem);
 
-    // extract output
-    int LS =(int) _out.left_wheel;
-    int RS =(int) _out.right_wheel;
-    int direction = _out.direction; 
+    // // extract output
+    // int LS = (int)_out.left_wheel;
+    // int RS = (int)_out.right_wheel;
+    // int direction = _out.direction;
 
-    
     // Serial.print(LS);
-    // Serial.print("\t");                       
-    // Serial.print(RS); 
-    // Serial.print("\t");                    
-    // Serial.print(direction); 
-    // Serial.print("\t");                       
-    // // // Serial.print(_out -> st);  
-    // Serial.print("\n");                       
-                                          
-                                 
+    // Serial.print("\t");
+    // Serial.print(RS);
+    // Serial.print("\t");
+    // Serial.print(direction);
+    // Serial.print("\t");
+    // // // Serial.print(_out -> st);
+    // Serial.print("\n");
 
-    //give motorspeeds to robo
-    Bot.MotorRun(LS, RS, direction);
-    //Serial.print(direction); 
+    // give motorspeeds to robo
+    // Bot.MotorRun(LS, RS, direction);
+    // Serial.print(direction);
     delay(1000);
-
-
-
   }
-  
-  
 }
 
-ISR(INT0_vect) //interrupt handle for left -> is in main file ?
+ISR(INT0_vect) // interrupt handle for left -> is in main file ?
 {
- steps_right ++;
-
+  steps_right++;
 }
 
-ISR(INT1_vect) //interrupt handle for right -> is in main file ?
+ISR(INT1_vect) // interrupt handle for right -> is in main file ?
 {
- steps_left ++;
+  steps_left++;
 }

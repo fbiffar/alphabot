@@ -1,4 +1,4 @@
-type stateName = OnLine | LostLine | ObstacleFollowing | Error | Turn90Right | MoveAway | MoveCloser | LeftTurn | RightTurn | LeftTurnSlow | RightTurnSlow | MoveForward | TurnRightEnd
+type stateName = OnLine | LostLine | ObstacleFollowing | Error | Turn90Right | MoveAway | MoveCloser | LeftTurn | RightTurn | LeftTurnSlow | RightTurnSlow | MoveForward | TurnRightEnd | Stop | Parking
 
 (*  l2, l1, m, r1 ,r2 are the 5  white line sensors, 0-4 = black, >7 = white *)
 (*  ir_front:    0° staight to driving direction
@@ -15,9 +15,9 @@ type stateName = OnLine | LostLine | ObstacleFollowing | Error | Turn90Right | M
 (*  d_encoder_steps are the amount of encoder steps between two cycles *)
 (*  white_line is true if the line is white and the background black *)
 (*  the line_thresholds are the bordrs for which TR-sensor inputs are considered as black or white *)
-(*  stop_threshold is the threshhold how long the robot has to wait if he hits a object *)
+(*  waiting_threshold is the threshhold how long the robot has to wait if he hits a object *)
 node controller(l2, l1, m, r1, r2: float;
-                ir_front, ir_left_f1, ir_left_f2, ir_left_b1, ir_left_b2 : bool;
+                ir_front, ir_left_f2, ir_left_f1, ir_left_b1, ir_left_b2 : bool;
                 outer_sensor_weight: float;
                 backward_factor: float;
                 basespeed_left, basespeed_right: float;
@@ -27,8 +27,10 @@ node controller(l2, l1, m, r1, r2: float;
                 white_line: bool;
                 line_threshold_white, line_threshold_black: float;  (* over line_threshold is the white line lost *)
                 (* to_black_threshold, to_white_threshold: float; *)
-                stop_threshold: float;
-                move_away_right, move_closer_left, right_turn_left, left_turn_right, right_turn_slow_left, left_turn_slow_right, turn_right_end_right: float)
+                waiting_threshold: float;
+                move_away_right, move_closer_left, right_turn_left, left_turn_right, right_turn_slow_left, left_turn_slow_right, turn_right_end_right: float;
+                min_parking_space: float;
+                stop_threshold: bool)
                 returns (left_wheel, right_wheel: float; direction: int; st: stateName)
     var 
         last left_line: bool;
@@ -36,6 +38,7 @@ node controller(l2, l1, m, r1, r2: float;
         last alligned:bool;
         last r:float;
         last l:float;
+        last first_car:bool;
     let
         (* check variable whether robot left white line *)
         left_line = if white_line
@@ -49,21 +52,33 @@ node controller(l2, l1, m, r1, r2: float;
                     else (l1 <. line_threshold_black) or (m <. line_threshold_black) or (r1 <. line_threshold_black);
         r = r1 +. outer_sensor_weight *. r2; (* weighted right sensors *)
         l = l1 +. outer_sensor_weight *. l2; (* weighted left  sensors *)
+        first_car = false -> (not ir_left_f2) or pre(first_car);
+
         
         automaton 
             state LineFollow
+                var
+                    last parking_distance: float;
                 do
-
+                    parking_distance = 0.0;
+                
                 automaton
                     state OnLine
                         var
                             error, p, i, d, correction: float;
+                            car_to_the_right: bool;
                         do (* normal line following proccedure with PID control*)
                             error = if white_line then (r -. l) else (l -. r);
                             p = error; 
                             i = error -> (pre(i) +. error);
                             d = error -> (error -. pre(error)); 
-                            correction = p*.kP +. i*.kI +. d*.kD; 
+                            correction = p*.kP +. i*.kI +. d*.kD;
+                            (* distance of a wheel = (2pi*30mm÷20) * encoder_steps *)
+                            parking_distance = if first_car and not car_to_the_right
+                                               then pre(parking_distance) +. ((d_encoder_steps_right +. d_encoder_steps_left) /. 2.0) *. 9.425
+                                               else 0.0;
+                            car_to_the_right = not ir_left_f2;
+
 
                             st          = OnLine;
                             direction   = 1;
@@ -77,11 +92,13 @@ node controller(l2, l1, m, r1, r2: float;
                                           else (if correction <. (basespeed_right -. motorspeed_right_max)
                                           then motorspeed_right_max
                                           else basespeed_right -. correction);
-                            (*white_line = if (r2+l2)/2 > to_black_threshold and m > line_threshold_white then false else pre(white_line)*)
-                            (*white_line = if (r2+l2)/2 < to_white_threshold and m < line_threshold_black then true else pre(white_line)*)
+                            (*white_line = if (r2+l2)/2 >. to_black_threshold and m >. line_threshold_white then false else pre(white_line)*)
+                            (*white_line = if (r2+l2)/2 <. to_white_threshold and m <. line_threshold_black then true else pre(white_line)*)
                         unless left_line then LostLine
                     state LostLine
                         do (* failstate: try to move robot back to line *)
+                            parking_distance = pre(parking_distance);
+
                             st          = LostLine;
                             direction   = 4;
                             left_wheel  = motorspeed_left_min  +. (motorspeed_left_max  -. motorspeed_left_min)  *. backward_factor;
@@ -90,6 +107,10 @@ node controller(l2, l1, m, r1, r2: float;
                 end
             (* change state if robot detects an obstale in front *)
             unless not ir_front then ObstacleFollowing
+            (* robot is on black line and parking process starts *)
+            (*until  white_line = false and parking_distance >=. min_parking_space then Parking
+            until  white_line = false and (l1 >. stop_threshold_black) and (m >. stop_threshold_black)  and (r1 >. stop_threshold_black) then Stop
+*)
 
             state ObstacleFollowing
                 var
@@ -100,7 +121,7 @@ node controller(l2, l1, m, r1, r2: float;
                     direction   = 0;
                     left_wheel  = motorspeed_left_min;
                     right_wheel = motorspeed_right_min;
-            until counter >=. stop_threshold and not ir_front then WallFollowing
+            until counter >=. waiting_threshold and not ir_front then WallFollowing
             | ir_front then LineFollow
 
 
@@ -219,5 +240,19 @@ node controller(l2, l1, m, r1, r2: float;
                     left_wheel  = basespeed_left;
                     right_wheel = motorspeed_right_min +. (basespeed_right -. motorspeed_left_min) *. turn_right_end_right;
             unless alligned then LineFollow
+
+            state Stop
+                do (* stop *)
+                    st = Stop;
+                    direction   = 0;
+                    left_wheel  = 0;
+                    right_wheel = 0;
+
+            state Parking
+                do (* park *)
+                    st = Stop;
+                    direction   = 0;
+                    left_wheel  = 0;
+                    right_wheel = 0;
         end
     tel

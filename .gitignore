@@ -3,3 +3,6 @@
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/ipch
+lib/lab/other/lab.epci
+lib/lab/other/lab.log
+lib/lab/other/lab.mls

@@ -2,8 +2,8 @@
 #include <TRSensor.h>
 #include <AlphaBotC.h>
 #include <Encoder.h>
-#include <lab.c>
-#include <lab_types.h>
+#include <lab_test.c>
+#include <lab_test_types.h>
 
 // sensors
 InfraRed IR;
@@ -12,8 +12,8 @@ AlphaBot Bot;
 Encoder Enc;
 
 // controller
-Lab__controller_out _out;
-Lab__controller_mem mem;
+Lab_test__controller_out _out;
+Lab_test__controller_mem mem;
 
 // Encoder
 int prev_encoder_left = 0;
@@ -61,14 +61,23 @@ float line_threshold_white = 70.0;
 float line_threshold_black = 60.0;
 
 // waiting time
-float stop_threshold = 100;
+float waiting_threshold = 100;
+
+//parking 
+
+float min_parking_space = 300;
+float stop_threshold = 60;
+float motorspeed_left_parking = 80; 
+float motorspeed_right_parking = 60; 
+float basespeed_parking = 80; 
+float last_forward_mm = 300;
 
 void setup()
 {
   // Initialize sensors
   Serial.begin(115200);
   Serial.print("setup\n");
-  Lab__controller_reset(&mem);
+  Lab_test__controller_reset(&mem);
   IR = InfraRed();
   TR = TRSensor();
   Bot = AlphaBot();
@@ -110,7 +119,7 @@ int main(int argc, char **argv)
     prev_encoder_right = steps_right;
 
     // run heptagon code
-    Lab__controller_step((float)TR_sensor[0], (float)TR_sensor[1], (float)TR_sensor[2], (float)TR_sensor[3], (float)TR_sensor[4], // (float l2, float l1, float m, float r1, float r2,
+    Lab_test__controller_step((float)TR_sensor[0], (float)TR_sensor[1], (float)TR_sensor[2], (float)TR_sensor[3], (float)TR_sensor[4], // (float l2, float l1, float m, float r1, float r2,
                                                                                                                                   // Lab_V2__controller_step(7.0, 7.0, 7.0, 7.0, 4.0,           // (float l2, float l1, float m, float r1, float r2,
                          1, 1, 1, 1, 1,                                                                                           // int ir_front, int ir_left_f1, int ir_left_f2,int ir_left_b1, int ir_left_b2,
                          outer_sensors_weight,
@@ -119,7 +128,7 @@ int main(int argc, char **argv)
                          motorspeed_right_max, motorspeed_right_min,
                          Kp, Ki, Kd,
                          d_encoder_steps_left, d_encoder_steps_right,
-                         white_line, line_threshold_white, line_threshold_black, stop_threshold,
+                         white_line, line_threshold_white, line_threshold_black, waiting_threshold,
                          move_away_right,
                          move_closer_left,
                          right_turn_left,
@@ -127,8 +136,16 @@ int main(int argc, char **argv)
                          right_turn_slow_left,
                          left_turn_slow_right,
                          turn_right_end_right,
+                         min_parking_space,
+                         stop_threshold,
+                         motorspeed_left_parking,
+                         motorspeed_right_parking,
+                         basespeed_parking, 
+                         last_forward_mm,
                          &_out,
                          &mem);
+
+
 
     // extract output
     int LS = (int)_out.left_wheel;

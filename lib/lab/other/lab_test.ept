@@ -146,8 +146,8 @@ node controller(l2, l1, m, r1, r2: float;
                         do (* nothing *)    
                             st = Error;
                             direction   = 0;
-                            left_wheel  = motorspeed_left_min;
-                            right_wheel = motorspeed_right_min;
+                            left_wheel  = 0.0;
+                            right_wheel = 0.0;
                     unless not front_free                          then Turn90Left
                     | left_front_too_close and left_back_too_close then MoveAway
                     | left_front_too_close and left_back_too_far   then RightTurn
@@ -162,18 +162,18 @@ node controller(l2, l1, m, r1, r2: float;
                     
                     state Turn90Left 
                         var
-                            sum_encoder_steps_right:  float;
+                            sum_encoder_steps:  float;
                             finished_turn: bool;
                         do (* turn 90° on the left wheel*)
-                            sum_encoder_steps_right  = 0.0 -> pre(sum_encoder_steps_right) +. d_encoder_steps_right;
+                            sum_encoder_steps  = 0.0 -> pre(sum_encoder_steps) +. (d_encoder_steps_right -. d_encoder_steps_left);
                             (* distance for 90° curve = 2*pi/4 * 130mm = 204.2mm *)
-                            (* distance of a wheel = (2pi*30mm÷20) * sum_encoder_steps_right *)
-                            (*     204.2 < 9.425 * sum_encoder_steps_right *)
-                            finished_turn = 204.2 <. (9.425 *. sum_encoder_steps_right);
+                            (* distance of a wheel = (2pi*30mm÷20) * sum_encoder_steps *)
+                            (*     204.2 < 9.425 * sum_encoder_steps *)
+                            finished_turn = 204.2 <. (9.425 *. sum_encoder_steps);
                             st            = Turn90Left;
                             direction     = 3;
-                            left_wheel    = basespeed_left;
-                            right_wheel   = 0.0;
+                            left_wheel    = 0.0;
+                            right_wheel   = basespeed_right;
                     until finished_turn then CheckState
 
                     state MoveAway
@@ -265,16 +265,15 @@ node controller(l2, l1, m, r1, r2: float;
                     
                     state Turn90Right 
                         var
-                            sum_encoder_steps_left:  float;
+                            sum_encoder_steps:  float;
                             finished_turn: bool;
                         do (* turn 90° on the right wheel*)
                             finished_move = false;
-                            sum_encoder_steps_left  = 0.0 -> pre(sum_encoder_steps_left) +. d_encoder_steps_left;
+                            sum_encoder_steps  = 0.0 -> pre(sum_encoder_steps) +. (d_encoder_steps_left -. d_encoder_steps_right);
                             (* distance for 90° curve = 2*pi/4 * 130mm = 204.2mm *)
-                            (* distance of a wheel = (2pi*30mm÷20) * sum_encoder_steps_left *)
-                            (*     204.2 < 9.425 * sum_encoder_steps_left *)
-                            (* <=> 20 < sum_encoder_steps_left *)
-                            finished_turn = 204.2 <. (9.425 *. sum_encoder_steps_left);
+                            (* distance of a wheel = (2pi*30mm÷20) * sum_encoder_steps *)
+                            (*     204.2 < 9.425 * sum_encoder_steps *)
+                            finished_turn = 204.2 <. (9.425 *. sum_encoder_steps);
                             st            = Turn90Right;
                             direction     = 3;
                             left_wheel    = motorspeed_left_parking;

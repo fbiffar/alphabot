@@ -1,4 +1,4 @@
-/* --- Generated the 7/4/2023 at 12:51 --- */
+/* --- Generated the 7/4/2023 at 13:3 --- */
 /* --- heptagon compiler, version 1.05.00 (compiled thu. jan. 12 12:27:5 CET 2023) --- */
 /* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab_test.ept --- */
 
@@ -814,11 +814,11 @@ void Lab_test__controller_step(float l2, float l1, float m, float r1,
           nr_1 = nr_1_St_1_Turn90Left;
           break;
         case Lab_test__St_1_MoveAway:
-          v_80 = (basespeed_right-motorspeed_right_min);
-          v_81 = (v_80*move_away_right);
-          right_wheel_St_2_WallFollowing_St_1_MoveAway = (motorspeed_right_min+v_81);
-          left_wheel_St_2_WallFollowing_St_1_MoveAway = basespeed_left;
-          direction_St_2_WallFollowing_St_1_MoveAway = 3;
+          right_wheel_St_2_WallFollowing_St_1_MoveAway = basespeed_right;
+          v_80 = (basespeed_left-motorspeed_left_min);
+          v_81 = (v_80*move_closer_left);
+          left_wheel_St_2_WallFollowing_St_1_MoveAway = (motorspeed_left_min+v_81);
+          direction_St_2_WallFollowing_St_1_MoveAway = 2;
           st_St_2_WallFollowing_St_1_MoveAway = Lab_test__MoveAway;
           if (true) {
             nr_1_St_1_MoveAway = true;
@@ -838,11 +838,11 @@ void Lab_test__controller_step(float l2, float l1, float m, float r1,
           nr_1 = nr_1_St_1_MoveAway;
           break;
         case Lab_test__St_1_MoveCloser:
-          right_wheel_St_2_WallFollowing_St_1_MoveCloser = basespeed_right;
-          v_78 = (basespeed_left-motorspeed_left_min);
-          v_79 = (v_78*move_closer_left);
-          left_wheel_St_2_WallFollowing_St_1_MoveCloser = (motorspeed_left_min+v_79);
-          direction_St_2_WallFollowing_St_1_MoveCloser = 2;
+          v_78 = (basespeed_right-motorspeed_right_min);
+          v_79 = (v_78*move_away_right);
+          right_wheel_St_2_WallFollowing_St_1_MoveCloser = (motorspeed_right_min+v_79);
+          left_wheel_St_2_WallFollowing_St_1_MoveCloser = basespeed_left;
+          direction_St_2_WallFollowing_St_1_MoveCloser = 3;
           st_St_2_WallFollowing_St_1_MoveCloser = Lab_test__MoveCloser;
           if (true) {
             nr_1_St_1_MoveCloser = true;

@@ -174,19 +174,19 @@ node controller(l2, l1, m, r1, r2: float;
                     until finished_turn then CheckState
 
                     state MoveAway
-                        do (* turn right with left larger fwd movement *)
+                        do (* turn left with left larger fwd movement *)
                             st = MoveAway;
-                            direction   = 3;
-                            left_wheel  = basespeed_left;
-                            right_wheel = motorspeed_right_min +. (basespeed_right -. motorspeed_right_min) *. move_away_right;
-                    until true then CheckState
-
-                    state MoveCloser
-                        do (* turn left with right larger fwd movement *)
-                            st = MoveCloser;
                             direction   = 2;
                             left_wheel  = motorspeed_left_min +. (basespeed_left -. motorspeed_left_min) *. move_closer_left;
                             right_wheel = basespeed_right;
+                    until true then CheckState
+
+                    state MoveCloser
+                        do (* turn right with right larger fwd movement *)
+                            st = MoveCloser;
+                            direction   = 3;
+                            left_wheel  = basespeed_left;
+                            right_wheel = motorspeed_right_min +. (basespeed_right -. motorspeed_right_min) *. move_away_right;
                     until true then CheckState
 
                     state RightTurn

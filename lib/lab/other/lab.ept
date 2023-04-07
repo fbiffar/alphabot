@@ -1,4 +1,4 @@
-type stateName = OnLine | LostLine | ObstacleFollowing | Error | Turn90Right | MoveAway | MoveCloser | LeftTurn | RightTurn | LeftTurnSlow | RightTurnSlow | MoveForward | TurnRightEnd | Stop | Parking
+type stateName = OnLine | LostLine | ObstacleFollowing | Error | Turn90Right |Turn90Left | MoveAway | MoveCloser | LeftTurn | RightTurn | LeftTurnSlow | RightTurnSlow | MoveForward | TurnRightEnd | Stop | Backwards | Forward
 
 (*  l2, l1, m, r1 ,r2 are the 5  white line sensors, 0-4 = black, >7 = white *)
 (*  ir_front:    0° staight to driving direction
@@ -27,10 +27,15 @@ node controller(l2, l1, m, r1, r2: float;
                 white_line: bool;
                 line_threshold_white, line_threshold_black: float;  (* over line_threshold is the white line lost *)
                 (* to_black_threshold, to_white_threshold: float; *)
+                (*ab hier neue variablen*)
                 waiting_threshold: float;
                 move_away_right, move_closer_left, right_turn_left, left_turn_right, right_turn_slow_left, left_turn_slow_right, turn_right_end_right: float;
+                (*parameter for parking process*)
                 min_parking_space: float;
-                stop_threshold: bool)
+                stop_threshold: float;
+                motorspeed_left_parking, motorspeed_right_parking: float;
+                motor_speed_parking:float;
+                last_forward_mm: float)
                 returns (left_wheel, right_wheel: float; direction: int; st: stateName)
     var 
         last left_line: bool;
@@ -39,6 +44,8 @@ node controller(l2, l1, m, r1, r2: float;
         last r:float;
         last l:float;
         last first_car:bool;
+        last car_to_the_right: bool;
+
     let
         (* check variable whether robot left white line *)
         left_line = if white_line
@@ -53,6 +60,7 @@ node controller(l2, l1, m, r1, r2: float;
         r = r1 +. outer_sensor_weight *. r2; (* weighted right sensors *)
         l = l1 +. outer_sensor_weight *. l2; (* weighted left  sensors *)
         first_car = false -> (not ir_left_f2) or pre(first_car);
+        car_to_the_right = not ir_left_f2;
 
         
         automaton 
@@ -60,13 +68,11 @@ node controller(l2, l1, m, r1, r2: float;
                 var
                     last parking_distance: float;
                 do
-                    parking_distance = 0.0;
                 
                 automaton
                     state OnLine
                         var
                             error, p, i, d, correction: float;
-                            car_to_the_right: bool;
                         do (* normal line following proccedure with PID control*)
                             error = if white_line then (r -. l) else (l -. r);
                             p = error; 
@@ -74,11 +80,9 @@ node controller(l2, l1, m, r1, r2: float;
                             d = error -> (error -. pre(error)); 
                             correction = p*.kP +. i*.kI +. d*.kD;
                             (* distance of a wheel = (2pi*30mm÷20) * encoder_steps *)
-                            parking_distance = if first_car and not car_to_the_right
+                            parking_distance = 0.0 -> if first_car and not car_to_the_right
                                                then pre(parking_distance) +. ((d_encoder_steps_right +. d_encoder_steps_left) /. 2.0) *. 9.425
                                                else 0.0;
-                            car_to_the_right = not ir_left_f2;
-
 
                             st          = OnLine;
                             direction   = 1;
@@ -97,7 +101,7 @@ node controller(l2, l1, m, r1, r2: float;
                         unless left_line then LostLine
                     state LostLine
                         do (* failstate: try to move robot back to line *)
-                            parking_distance = pre(parking_distance);
+                            parking_distance = 0.0 -> pre(parking_distance);
 
                             st          = LostLine;
                             direction   = 4;
@@ -105,12 +109,11 @@ node controller(l2, l1, m, r1, r2: float;
                             right_wheel = motorspeed_right_min +. (motorspeed_right_max -. motorspeed_right_min) *. backward_factor;
                     unless not left_m then OnLine
                 end
+            (* robot is on black line and parking process starts *)
+            until  white_line = false and parking_distance >=. min_parking_space then Parking
+            |      white_line = false and (l1 >. stop_threshold) and (m >. stop_threshold)  and (r1 >. stop_threshold) then Stop
             (* change state if robot detects an obstale in front *)
             unless not ir_front then ObstacleFollowing
-            (* robot is on black line and parking process starts *)
-            (*until  white_line = false and parking_distance >=. min_parking_space then Parking
-            until  white_line = false and (l1 >. stop_threshold_black) and (m >. stop_threshold_black)  and (r1 >. stop_threshold_black) then Stop
-*)
 
             state ObstacleFollowing
                 var
@@ -146,7 +149,7 @@ node controller(l2, l1, m, r1, r2: float;
                             direction   = 0;
                             left_wheel  = motorspeed_left_min;
                             right_wheel = motorspeed_right_min;
-                    unless not front_free                          then Turn90Right
+                    unless not front_free                          then Turn90Left
                     | left_front_too_close and left_back_too_close then MoveAway
                     | left_front_too_close and left_back_too_far   then RightTurn
                     | left_front_too_far   and left_back_too_close then LeftTurn
@@ -158,20 +161,19 @@ node controller(l2, l1, m, r1, r2: float;
                     | left_front_correct   and left_back_correct   then MoveForward
 
                     
-                    state Turn90Right 
+                    state Turn90Left 
                         var
-                            sum_encoder_steps_left:  float;
+                            sum_encoder_steps_right:  float;
                             finished_turn: bool;
-                        do (* turn 90° on the right wheel*)
-                            sum_encoder_steps_left  = 0.0 -> pre(sum_encoder_steps_left) +. d_encoder_steps_left;
+                        do (* turn 90° on the left wheel*)
+                            sum_encoder_steps_right  = 0.0 -> pre(sum_encoder_steps_right) +. d_encoder_steps_right;
                             (* distance for 90° curve = 2*pi/4 * 130mm = 204.2mm *)
-                            (* distance of a wheel = (2pi*30mm÷20) * sum_encoder_steps_left *)
-                            (*     204.2 < 9.425 * sum_encoder_steps_left *)
-                            (* <=> 20 < sum_encoder_steps_left *)
-                            finished_turn = 204.2 <. (9.425 *. sum_encoder_steps_left);
-                            st            = Turn90Right;
+                            (* distance of a wheel = (2pi*30mm÷20) * sum_encoder_steps_right *)
+                            (*     204.2 < 9.425 * sum_encoder_steps_right *)
+                            finished_turn = 204.2 <. (9.425 *. sum_encoder_steps_right);
+                            st            = Turn90Left;
                             direction     = 3;
-                            left_wheel    = motorspeed_left_max;
+                            left_wheel    = basespeed_left;
                             right_wheel   = motorspeed_right_min;
                     until finished_turn then CheckState
 
@@ -245,14 +247,56 @@ node controller(l2, l1, m, r1, r2: float;
                 do (* stop *)
                     st = Stop;
                     direction   = 0;
-                    left_wheel  = 0;
-                    right_wheel = 0;
+                    left_wheel  = 0.0;
+                    right_wheel = 0.0;
 
             state Parking
+                var
+                    finished_move: bool;
                 do (* park *)
-                    st = Stop;
-                    direction   = 0;
-                    left_wheel  = 0;
-                    right_wheel = 0;
+                automaton 
+                    state Backwards
+                        do (* failstate: try to move robot back to line *)
+                            finished_move = false;
+                            st          = Backwards;
+                            direction   = 4;
+                            left_wheel  = motor_speed_parking;
+                            right_wheel = motor_speed_parking;
+                    unless car_to_the_right then Turn90Right
+                    
+                    state Turn90Right 
+                        var
+                            sum_encoder_steps_left:  float;
+                            finished_turn: bool;
+                        do (* turn 90° on the right wheel*)
+                            finished_move = false;
+                            sum_encoder_steps_left  = 0.0 -> pre(sum_encoder_steps_left) +. d_encoder_steps_left;
+                            (* distance for 90° curve = 2*pi/4 * 130mm = 204.2mm *)
+                            (* distance of a wheel = (2pi*30mm÷20) * sum_encoder_steps_left *)
+                            (*     204.2 < 9.425 * sum_encoder_steps_left *)
+                            (* <=> 20 < sum_encoder_steps_left *)
+                            finished_turn = 204.2 <. (9.425 *. sum_encoder_steps_left);
+                            st            = Turn90Right;
+                            direction     = 3;
+                            left_wheel    = motorspeed_left_parking;
+                            right_wheel   = motorspeed_right_parking;
+                    until finished_turn then Forward 
+
+                    state Forward 
+                        var
+                            sum_encoder_steps_left:  float;
+                        do (* turn 90° on the right wheel*)
+                            sum_encoder_steps_left  = 0.0 -> pre(sum_encoder_steps_left) +. d_encoder_steps_left;
+                            (* distance for 90° curve = 2*pi/4 * 130mm = 204.2mm *)
+                            (* distance of a wheel = (2pi*30mm÷20) * sum_encoder_steps_left *)
+                            (*     204.2 < 9.425 * sum_encoder_steps_left *)
+                            (* <=> 20 < sum_encoder_steps_left *)
+                            finished_move = last_forward_mm >. (9.425 *. sum_encoder_steps_left);
+                            st            = Forward;
+                            direction     = 3;
+                            left_wheel    = motor_speed_parking;
+                            right_wheel   = motor_speed_parking;
+                end
+            until finished_move then Stop  
         end
     tel

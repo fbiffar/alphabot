@@ -1,4 +1,4 @@
-/* --- Generated the 7/4/2023 at 10:51 --- */
+/* --- Generated the 7/4/2023 at 11:13 --- */
 /* --- heptagon compiler, version 1.05.00 (compiled thu. jan. 12 12:27:5 CET 2023) --- */
 /* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab_test.ept --- */
 
@@ -917,7 +917,7 @@ void Lab_test__controller_step(float l2, float l1, float m, float r1,
           nr_1 = nr_1_St_1_CheckState;
           break;
         case Lab_test__St_1_Turn90Left:
-          right_wheel_St_3_WallFollowing_St_1_Turn90Left = motorspeed_right_min;
+          right_wheel_St_3_WallFollowing_St_1_Turn90Left = 0.000000;
           left_wheel_St_3_WallFollowing_St_1_Turn90Left = basespeed_left;
           direction_St_3_WallFollowing_St_1_Turn90Left = 3;
           st_St_3_WallFollowing_St_1_Turn90Left = Lab_test__Turn90Left;

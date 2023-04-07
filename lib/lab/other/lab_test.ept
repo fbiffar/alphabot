@@ -173,7 +173,7 @@ node controller(l2, l1, m, r1, r2: float;
                             st            = Turn90Left;
                             direction     = 3;
                             left_wheel    = basespeed_left;
-                            right_wheel   = motorspeed_right_min;
+                            right_wheel   = 0.0;
                     until finished_turn then CheckState
 
                     state MoveAway

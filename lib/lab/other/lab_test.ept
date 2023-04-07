@@ -163,7 +163,8 @@ node controller(l2, l1, m, r1, r2: float;
                             sum_encoder_steps:  float;
                             finished_turn: bool;
                         do (* turn 90° on the left wheel*)
-                            sum_encoder_steps  = 0.0 -> pre(sum_encoder_steps) +. (d_encoder_steps_right -. d_encoder_steps_left);
+                            (* sum_encoder_steps  = 0.0 -> pre(sum_encoder_steps) +. (d_encoder_steps_right -. d_encoder_steps_left); *)
+                            sum_encoder_steps  = 0.0 -> pre(sum_encoder_steps) +. d_encoder_steps_right;                           
                             (* distance for 90° curve = 2*pi/4 * 130mm = 204.2mm *)
                             (* distance of a wheel = (2pi*30mm÷20) * sum_encoder_steps *)
                             (*     204.2 < 9.425 * sum_encoder_steps *)
@@ -195,20 +196,20 @@ node controller(l2, l1, m, r1, r2: float;
                             st = RightTurn;
                             direction   = 3;
                             left_wheel  = motorspeed_left_min +. (motorspeed_left_max -. motorspeed_left_min) *. right_turn_left;
-                            right_wheel = motorspeed_right_min;
+                            right_wheel = 0.0;
                     until true then CheckState
 
                     state LeftTurn
                         do (* turn left with right larger fwd movement *)
                             st = LeftTurn;
                             direction   = 2;
-                            left_wheel  = motorspeed_left_min;
+                            left_wheel  = 0.0;
                             right_wheel = motorspeed_right_min +. (motorspeed_right_max -. motorspeed_right_min) *. left_turn_right;
                     until true then CheckState
 
                     state RightTurnSlow
                         do (* turn right with left slightly larger fwd movement *)
-                            st = RightTurn;
+                            st = RightTurnSlow;
                             direction   = 3;
                             left_wheel  = motorspeed_left_min +. (motorspeed_left_max -. motorspeed_left_min) *. right_turn_slow_left;
                             right_wheel = motorspeed_right_min;
@@ -216,7 +217,7 @@ node controller(l2, l1, m, r1, r2: float;
 
                     state LeftTurnSlow
                         do (* turn left with right slightly larger fwd movement *)
-                            st = LeftTurn;
+                            st = LeftTurnSlow;
                             direction   = 2;
                             left_wheel  = motorspeed_left_min;
                             right_wheel = motorspeed_right_min +. (motorspeed_right_max -. motorspeed_right_min) *. left_turn_slow_right;

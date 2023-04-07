@@ -103,9 +103,9 @@ node controller(l2, l1, m, r1, r2: float;
                             parking_distance = 0.0 -> pre(parking_distance);
 
                             st          = LostLine;
-                            direction   = 4;
-                            left_wheel  = motorspeed_left_min  +. (motorspeed_left_max  -. motorspeed_left_min)  *. backward_factor;
-                            right_wheel = motorspeed_right_min +. (motorspeed_right_max -. motorspeed_right_min) *. backward_factor;
+                            direction   = 0;
+                            left_wheel  = 0.0;
+                            right_wheel = 0.0;
                     unless not left_m then OnLine
                 end
             (* robot is on black line and parking process starts *)

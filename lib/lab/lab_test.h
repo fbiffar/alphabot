@@ -1,4 +1,4 @@
-/* --- Generated the 7/4/2023 at 10:18 --- */
+/* --- Generated the 7/4/2023 at 10:51 --- */
 /* --- heptagon compiler, version 1.05.00 (compiled thu. jan. 12 12:27:5 CET 2023) --- */
 /* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab_test.ept --- */
 
@@ -6,8 +6,7 @@
 #define LAB_TEST_H
 
 #include "lab_test_types.h"
-typedef struct Lab_test__controller_mem
-{
+typedef struct Lab_test__controller_mem {
   Lab_test__st_3 ck;
   Lab_test__st_2 v_37;
   float v_41;
@@ -24,13 +23,13 @@ typedef struct Lab_test__controller_mem
   Lab_test__st v_128;
   float v_132;
   int v_129;
-  float v_158;
-  int v_153;
-  float v_147;
-  int v_144;
-  float v_142;
-  int v_139;
-  int v_164;
+  float v_154;
+  int v_149;
+  float v_143;
+  int v_140;
+  float v_138;
+  int v_135;
+  int v_160;
   float parking_distance_1;
   int v_34;
   int v_32;
@@ -44,15 +43,14 @@ typedef struct Lab_test__controller_mem
   int left_line_1;
 } Lab_test__controller_mem;
 
-typedef struct Lab_test__controller_out
-{
+typedef struct Lab_test__controller_out {
   float left_wheel;
   float right_wheel;
   int direction;
   Lab_test__stateName st;
 } Lab_test__controller_out;
 
-void Lab_test__controller_reset(Lab_test__controller_mem *self);
+void Lab_test__controller_reset(Lab_test__controller_mem* self);
 
 void Lab_test__controller_step(float l2, float l1, float m, float r1,
                                float r2, int ir_front, int ir_left_f2,
@@ -80,7 +78,7 @@ void Lab_test__controller_step(float l2, float l1, float m, float r1,
                                float motorspeed_right_parking,
                                float basespeed_parking,
                                float last_forward_mm,
-                               Lab_test__controller_out *_out,
-                               Lab_test__controller_mem *self);
+                               Lab_test__controller_out* _out,
+                               Lab_test__controller_mem* self);
 
 #endif // LAB_TEST_H

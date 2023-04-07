@@ -1,4 +1,4 @@
-/* --- Generated the 7/4/2023 at 10:18 --- */
+/* --- Generated the 7/4/2023 at 10:51 --- */
 /* --- heptagon compiler, version 1.05.00 (compiled thu. jan. 12 12:27:5 CET 2023) --- */
 /* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab_test.ept --- */
 
@@ -8,7 +8,7 @@
 #include "lab_test.h"
 
 void Lab_test__controller_reset(Lab_test__controller_mem* self) {
-  self->v_164 = false;
+  self->v_160 = false;
   self->v_128 = Lab_test__St_OnLine;
   self->v_111 = true;
   self->v_105 = false;
@@ -18,9 +18,9 @@ void Lab_test__controller_reset(Lab_test__controller_mem* self) {
   self->pnr_3 = false;
   self->ck = Lab_test__St_3_LineFollow;
   self->v_32 = true;
-  self->v_153 = true;
-  self->v_144 = true;
-  self->v_139 = true;
+  self->v_149 = true;
+  self->v_140 = true;
+  self->v_135 = true;
   self->v_129 = true;
   self->v_99 = true;
   self->v_44 = true;
@@ -268,33 +268,29 @@ void Lab_test__controller_step(float l2, float l1, float m, float r1,
   int r_2_St_OnLine;
   Lab_test__st s_St_OnLine;
   Lab_test__st ck_2;
-  float v_136;
-  float v_135;
-  float v_134;
-  float v_133;
   int v_131;
   int v_130;
-  float v_163;
-  float v_162;
-  float v_161;
-  float v_160;
   float v_159;
-  int v_157;
-  int v_156;
-  int v_155;
-  int v_154;
-  float v_152;
-  float v_151;
-  float v_150;
-  float v_149;
+  float v_158;
+  float v_157;
+  float v_156;
+  float v_155;
+  int v_153;
+  int v_152;
+  int v_151;
+  int v_150;
   float v_148;
-  int v_146;
-  int v_145;
-  float v_143;
+  float v_147;
+  float v_146;
+  float v_145;
+  float v_144;
+  int v_142;
   int v_141;
-  int v_140;
-  float v_138;
-  float v_137;
+  float v_139;
+  int v_137;
+  int v_136;
+  float v_134;
+  float v_133;
   float error;
   float p;
   float i;
@@ -530,7 +526,7 @@ void Lab_test__controller_step(float l2, float l1, float m, float r1,
         pnr = false;
         ck_2 = Lab_test__St_OnLine;
       } else {
-        pnr = self->v_164;
+        pnr = self->v_160;
         ck_2 = self->v_128;
       };
       v_123 = (r1>stop_threshold);
@@ -582,65 +578,65 @@ void Lab_test__controller_step(float l2, float l1, float m, float r1,
           left_wheel_St_3_LineFollow_St_OnLine = 0.000000;
           direction_St_3_LineFollow_St_OnLine = 0;
           st_St_3_LineFollow_St_OnLine = Lab_test__OnLine;
-          v_159 = (d_encoder_steps_right+d_encoder_steps_left);
-          v_160 = (v_159/2.000000);
-          v_161 = (v_160*9.425000);
-          v_162 = (self->v_158+v_161);
-          v_156 = !(car_to_the_right);
-          v_157 = (first_car&&v_156);
-          if (v_157) {
-            v_163 = v_162;
+          v_155 = (d_encoder_steps_right+d_encoder_steps_left);
+          v_156 = (v_155/2.000000);
+          v_157 = (v_156*9.425000);
+          v_158 = (self->v_154+v_157);
+          v_152 = !(car_to_the_right);
+          v_153 = (first_car&&v_152);
+          if (v_153) {
+            v_159 = v_158;
           } else {
-            v_163 = 0.000000;
+            v_159 = 0.000000;
           };
-          v_154 = (r_5||r_2);
-          if (self->v_153) {
-            v_155 = true;
+          v_150 = (r_5||r_2);
+          if (self->v_149) {
+            v_151 = true;
           } else {
-            v_155 = v_154;
+            v_151 = v_150;
           };
-          if (v_155) {
+          if (v_151) {
             parking_distance_St_OnLine = 0.000000;
           } else {
-            parking_distance_St_OnLine = v_163;
+            parking_distance_St_OnLine = v_159;
           };
-          v_145 = (r_5||r_2);
-          if (self->v_144) {
-            v_146 = true;
+          v_141 = (r_5||r_2);
+          if (self->v_140) {
+            v_142 = true;
           } else {
-            v_146 = v_145;
+            v_142 = v_141;
           };
-          v_140 = (r_5||r_2);
-          if (self->v_139) {
-            v_141 = true;
+          v_136 = (r_5||r_2);
+          if (self->v_135) {
+            v_137 = true;
           } else {
-            v_141 = v_140;
+            v_137 = v_136;
           };
-          v_138 = (l-r);
-          v_137 = (r-l);
+          v_134 = (l-r);
+          v_133 = (r-l);
           if (white_line) {
-            error = v_137;
+            error = v_133;
           } else {
-            error = v_138;
+            error = v_134;
           };
-          v_148 = (error-self->v_147);
-          if (v_146) {
+          v_144 = (error-self->v_143);
+          if (v_142) {
             d = error;
           } else {
-            d = v_148;
+            d = v_144;
           };
-          v_152 = (d*kD);
-          v_143 = (self->v_142+error);
-          if (v_141) {
+          v_148 = (d*kD);
+          v_139 = (self->v_138+error);
+          if (v_137) {
             i = error;
           } else {
-            i = v_143;
+            i = v_139;
           };
-          v_150 = (i*kI);
+          v_146 = (i*kI);
           p = error;
-          v_149 = (p*kP);
-          v_151 = (v_149+v_150);
-          correction = (v_151+v_152);
+          v_145 = (p*kP);
+          v_147 = (v_145+v_146);
+          correction = (v_147+v_148);
           nr_St_OnLine = false;
           ns_St_OnLine = Lab_test__St_OnLine;
           left_wheel_St_3_LineFollow = left_wheel_St_3_LineFollow_St_OnLine;
@@ -652,13 +648,9 @@ void Lab_test__controller_step(float l2, float l1, float m, float r1,
           nr = nr_St_OnLine;
           break;
         case Lab_test__St_LostLine:
-          v_135 = (motorspeed_right_max-motorspeed_right_min);
-          v_136 = (v_135*backward_factor);
-          right_wheel_St_3_LineFollow_St_LostLine = (motorspeed_right_min+v_136);
-          v_133 = (motorspeed_left_max-motorspeed_left_min);
-          v_134 = (v_133*backward_factor);
-          left_wheel_St_3_LineFollow_St_LostLine = (motorspeed_left_min+v_134);
-          direction_St_3_LineFollow_St_LostLine = 4;
+          right_wheel_St_3_LineFollow_St_LostLine = 0.000000;
+          left_wheel_St_3_LineFollow_St_LostLine = 0.000000;
+          direction_St_3_LineFollow_St_LostLine = 0;
           st_St_3_LineFollow_St_LostLine = Lab_test__LostLine;
           v_130 = (r_5||r_2);
           if (self->v_129) {
@@ -700,7 +692,7 @@ void Lab_test__controller_step(float l2, float l1, float m, float r1,
       ns_3 = ns_3_St_3_LineFollow;
       nr_3 = nr_3_St_3_LineFollow;
       self->parking_distance_1 = parking_distance;
-      self->v_164 = nr;
+      self->v_160 = nr;
       self->v_128 = ns;
       break;
     case Lab_test__St_3_ObstacleFollowing:
@@ -1319,12 +1311,12 @@ void Lab_test__controller_step(float l2, float l1, float m, float r1,
     case Lab_test__St_3_LineFollow:
       switch (ck_3) {
         case Lab_test__St_OnLine:
-          self->v_158 = parking_distance;
-          self->v_153 = false;
-          self->v_147 = error;
-          self->v_144 = false;
-          self->v_142 = i;
-          self->v_139 = false;
+          self->v_154 = parking_distance;
+          self->v_149 = false;
+          self->v_143 = error;
+          self->v_140 = false;
+          self->v_138 = i;
+          self->v_135 = false;
           break;
         case Lab_test__St_LostLine:
           self->v_132 = parking_distance;

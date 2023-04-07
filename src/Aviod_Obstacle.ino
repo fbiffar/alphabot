@@ -33,7 +33,7 @@ float outer_sensors_weight = 2;
 unsigned int TR_sensor[5] = {0, 0, 0, 0, 0};
 
 // IR Sensor
-unsigned int IR_range[5] = {0, 0, 0, 0, 0};
+unsigned int IR_sensor[5] = {0, 0, 0, 0, 0};
 
 // black line = false or white line = true
 int white_line = 1;
@@ -61,7 +61,7 @@ float line_threshold_white = 70.0;
 float line_threshold_black = 60.0;
 
 // waiting time
-float waiting_threshold = 100;
+float waiting_threshold = 10;
 
 //parking 
 
@@ -93,13 +93,13 @@ int main(int argc, char **argv)
   {
 
     // read out sensors
-    IR.read_IR(IR_range, 5);
+    IR.read_IR(IR_sensor, 5);
     TR.read_sensors_calibration(TR_sensor);
 
     // print results
     // for (int i = 0; i < 5; i++)
     // {
-    //   Serial.print(IR_range[i]);
+    //   Serial.print(IR_sensor[i]);
     //   Serial.print("\t");
     // }
     // Serial.print("\n");
@@ -119,9 +119,8 @@ int main(int argc, char **argv)
     prev_encoder_right = steps_right;
 
     // run heptagon code
-    Lab_test__controller_step((float)TR_sensor[0], (float)TR_sensor[1], (float)TR_sensor[2], (float)TR_sensor[3], (float)TR_sensor[4], // (float l2, float l1, float m, float r1, float r2,
-                                                                                                                                  // Lab_V2__controller_step(7.0, 7.0, 7.0, 7.0, 4.0,           // (float l2, float l1, float m, float r1, float r2,
-                         1, 1, 1, 1, 1,                                                                                           // int ir_front, int ir_left_f1, int ir_left_f2,int ir_left_b1, int ir_left_b2,
+    Lab_test__controller_step((float)TR_sensor[0], (float)TR_sensor[1], (float)TR_sensor[2], (float)TR_sensor[3], (float)TR_sensor[4], // (float l2, float l1, float m, float r1, float r2
+                         (int)IR_sensor[0], (int)IR_sensor[1], (int)IR_sensor[2], (int)IR_sensor[3], (int)IR_sensor[4],    // int ir_front, int ir_left_f1, int ir_left_f2,int ir_left_b1, int ir_left_b2,
                          outer_sensors_weight,
                          backward_factor, basespeed_left, basespeed_right,
                          motorspeed_left_max, motorspeed_left_min,
@@ -156,9 +155,9 @@ int main(int argc, char **argv)
     Serial.print("\t");
     Serial.print(RS);
     Serial.print("\t");
-    Serial.print(direction);
-    Serial.print("\t");
-    // // Serial.print(_out -> st);
+    // Serial.print(direction);
+    // Serial.print("\t");
+    // // // Serial.print(_out -> st);
     Serial.print("\n");
 
     // give motorspeeds to robo

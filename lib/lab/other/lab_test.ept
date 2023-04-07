@@ -232,69 +232,6 @@ node controller(l2, l1, m, r1, r2: float;
                             right_wheel = basespeed_right;
                     until true then CheckState
                 end
-            until not left_line then TurnRightEnd 
 
-            state TurnRightEnd
-                do (* turn right until robot is alligned with line *)
-                    st = TurnRightEnd;
-                    direction   = 3;
-                    left_wheel  = basespeed_left;
-                    right_wheel = motorspeed_right_min +. (basespeed_right -. motorspeed_left_min) *. turn_right_end_right;
-            unless alligned then LineFollow
-
-            state Stop
-                do (* stop *)
-                    st = Stop;
-                    direction   = 0;
-                    left_wheel  = 0.0;
-                    right_wheel = 0.0;
-
-            state Parking
-                var
-                    finished_move: bool;
-                do (* park *)
-                automaton 
-                    state Backwards
-                        do (* failstate: try to move robot back to line *)
-                            finished_move = false;
-                            st          = Backwards;
-                            direction   = 4;
-                            left_wheel  = basespeed_parking;
-                            right_wheel = basespeed_parking;
-                    unless car_to_the_right then Turn90Right
-                    
-                    state Turn90Right 
-                        var
-                            sum_encoder_steps:  float;
-                            finished_turn: bool;
-                        do (* turn 90° on the right wheel*)
-                            finished_move = false;
-                            sum_encoder_steps  = 0.0 -> pre(sum_encoder_steps) +. (d_encoder_steps_left -. d_encoder_steps_right);
-                            (* distance for 90° curve = 2*pi/4 * 130mm = 204.2mm *)
-                            (* distance of a wheel = (2pi*30mm÷20) * sum_encoder_steps *)
-                            (*     204.2 < 9.425 * sum_encoder_steps *)
-                            finished_turn = 204.2 <. (9.425 *. sum_encoder_steps);
-                            st            = Turn90Right;
-                            direction     = 3;
-                            left_wheel    = motorspeed_left_parking;
-                            right_wheel   = motorspeed_right_parking;
-                    until finished_turn then Forward 
-
-                    state Forward 
-                        var
-                            sum_encoder_steps_left:  float;
-                        do (* turn 90° on the right wheel*)
-                            sum_encoder_steps_left  = 0.0 -> pre(sum_encoder_steps_left) +. d_encoder_steps_left;
-                            (* distance for 90° curve = 2*pi/4 * 130mm = 204.2mm *)
-                            (* distance of a wheel = (2pi*30mm÷20) * sum_encoder_steps_left *)
-                            (*     204.2 < 9.425 * sum_encoder_steps_left *)
-                            (* <=> 20 < sum_encoder_steps_left *)
-                            finished_move = last_forward_mm >. (9.425 *. sum_encoder_steps_left);
-                            st            = Forward;
-                            direction     = 3;
-                            left_wheel    = basespeed_parking;
-                            right_wheel   = basespeed_parking;
-                end
-            until finished_move then Stop  
         end
     tel

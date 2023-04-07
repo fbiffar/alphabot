@@ -129,7 +129,7 @@ node controller(l2, l1, m, r1, r2: float;
                     front_free, left_front_too_close, left_front_too_far, left_back_too_close, left_back_too_far, left_front_correct, left_back_correct: bool;
 
                 do  
-                    front_free           = not ir_front;
+                    front_free           = ir_front;
                     left_front_too_close = not ir_left_f1; (* and not ir_left_f2 *)
                     left_front_too_far   = ir_left_f2;     (* and ir_left_f1 *)
                     left_front_correct   = not left_front_too_close and not left_front_too_far;

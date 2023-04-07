@@ -7,7 +7,7 @@
 
 #include "stdbool.h"
 #include "assert.h"
-#include "pervasives.h"
+
 typedef enum {
   Lab_test__St_2_WallFollowing,
   Lab_test__St_2_ObstacleFollowing,

@@ -72,6 +72,69 @@ float motorspeed_right_parking = 60;
 float basespeed_parking = 80;
 float last_forward_mm = 300;
 
+
+int print_enum( Lab_test__stateName state)
+{
+  switch (state)
+  {
+  case Lab_test__OnLine:
+    {Serial.print("OnLine");
+    break;}
+  case Lab_test__LostLine:
+    {Serial.print("LostLine");
+    break;}
+  case Lab_test__ObstacleFollowing:
+    {Serial.print("ObstacleFollowing");
+    break;}
+  case Lab_test__Error:
+    {Serial.print("Error");
+    break;}
+  case Lab_test__Turn90Right:
+    {Serial.print("Turn90Right");
+    break;}
+  case Lab_test__Turn90Left:
+    {Serial.print("Turn90Left");
+    break;}
+  case Lab_test__MoveAway:
+    {Serial.print("MoveAway");
+    break;}
+  case Lab_test__MoveCloser:
+    {Serial.print("MoveCloser");
+    break;}
+  case Lab_test__LeftTurn:
+    {Serial.print("LeftTurn");
+    break;}
+  case Lab_test__RightTurn:
+    {Serial.print("RightTurn");
+    break;}
+  case Lab_test__LeftTurnSlow:
+    {Serial.print("LeftTurnSlow");
+    break;}
+  case Lab_test__RightTurnSlow:
+    {Serial.print("RightTurnSlow");
+    break;}
+  case Lab_test__MoveForward:
+    {Serial.print("MoveForward");
+    break;}
+  case Lab_test__TurnRightEnd:
+    {Serial.print("TurnRightEnd");
+    break;}
+  case Lab_test__Stop:
+    {Serial.print("Stop");
+    break;}
+  case Lab_test__Backwards:
+    {Serial.print("Backwards");
+    break;}
+  case Lab_test__Forward:
+    {Serial.print("Forward ");
+    break;}
+  default:
+    {Serial.print("noState");
+    break;}
+  }
+  return 0;
+}
+
 void setup()
 {
   // Initialize sensors
@@ -155,8 +218,7 @@ int main(int argc, char **argv)
     Serial.print("\t");
     // Serial.print(direction);
     // Serial.print("\t");
-    const char *state = print_enum(_out.st);
-    Serial.print(state);
+    print_enum(_out.st);
     Serial.print("\n");
 
     // give motorspeeds to robo
@@ -174,47 +236,4 @@ ISR(INT0_vect) // interrupt handle for left -> is in main file ?
 ISR(INT1_vect) // interrupt handle for right -> is in main file ?
 {
   steps_left++;
-}
-
-const char *print_enum(enum Lab_test__stateName state)
-{
-  switch (state)
-  {
-  case Lab_test__OnLine:
-    return "OnLine";
-  case Lab_test__LostLine:
-    return "LostLine";
-  case Lab_test__ObstacleFollowing:
-    return "ObstacleFollowing";
-  case Lab_test__Error:
-    return "Error";
-  case Lab_test__Turn90Right:
-    return "Turn90Right";
-  case Lab_test__Turn90Left:
-    return "Turn90Left";
-  case Lab_test__MoveAway:
-    return "MoveAway";
-  case Lab_test__MoveCloser:
-    return "MoveCloser";
-  case Lab_test__LeftTurn:
-    return "LeftTurn";
-  case Lab_test__RightTurn:
-    return "RightTurn";
-  case Lab_test__LeftTurnSlow:
-    return "LeftTurnSlow";
-  case Lab_test__RightTurnSlow:
-    return "RightTurnSlow";
-  case Lab_test__MoveForward:
-    return "MoveForward";
-  case Lab_test__TurnRightEnd:
-    return "TurnRightEnd";
-  case Lab_test__Stop:
-    return "Stop";
-  case Lab_test__Backwards:
-    return "Backwards";
-  case Lab_test__Forward:
-    return "Forward ";
-  default:
-    return "noState";
-  }
 }

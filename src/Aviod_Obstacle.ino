@@ -48,13 +48,14 @@ float motorspeed_right_max = 200;
 float motorspeed_right_min = 60;
 
 // obstacle avoidance
-float move_away_right = 0.25;
-float move_closer_left = 0.25;
-float right_turn_left = 0.25;
-float left_turn_right = 0.25;
-float right_turn_slow_left = 0.125;
-float left_turn_slow_right = 0.125;
+float move_away_right = 0.05;
+float move_closer_left = 0.05;
+float right_turn_left = 0.125;
+float left_turn_right = 0.125;
+float right_turn_slow_left = 0.025;
+float left_turn_slow_right = 0.025;
 float turn_right_end_right = 0.1;
+float basespeed_obstacle = 90;
 
 // line thresholds
 float line_threshold_white = 70.0;
@@ -62,6 +63,8 @@ float line_threshold_black = 60.0;
 
 // waiting time
 float waiting_threshold = 10;
+
+//obstacle 
 
 // parking
 
@@ -203,6 +206,7 @@ int main(int argc, char **argv)
                               motorspeed_left_parking,
                               motorspeed_right_parking,
                               basespeed_parking,
+                              basespeed_obstacle,
                               last_forward_mm,
                               &_out,
                               &mem);

@@ -118,8 +118,8 @@ node controller(l2, l1, m, r1, r2: float;
                     counter     = 0.0 -> pre(counter) +. 1.0;
                     st          = ObstacleFollowing;
                     direction   = 0;
-                    left_wheel  = motorspeed_left_min;
-                    right_wheel = motorspeed_right_min;
+                    left_wheel  = 0.0;
+                    right_wheel = 0.0;
             until counter >=. waiting_threshold and not ir_front then WallFollowing
             | ir_front then LineFollow
 

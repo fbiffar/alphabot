@@ -155,7 +155,8 @@ int main(int argc, char **argv)
     Serial.print("\t");
     // Serial.print(direction);
     // Serial.print("\t");
-    print_enum(_out->st);
+    const char *state = print_enum(_out.st);
+    Serial.print(state);
     Serial.print("\n");
 
     // give motorspeeds to robo
@@ -175,46 +176,45 @@ ISR(INT1_vect) // interrupt handle for right -> is in main file ?
   steps_left++;
 }
 
-int print_enum(enum Lab_test__stateName state)
+const char *print_enum(enum Lab_test__stateName state)
 {
   switch (state)
   {
   case Lab_test__OnLine:
-    Serial.print("OnLine");
+    return "OnLine";
   case Lab_test__LostLine:
-    Serial.print("LostLine");
+    return "LostLine";
   case Lab_test__ObstacleFollowing:
-    Serial.print("ObstacleFollowing");
+    return "ObstacleFollowing";
   case Lab_test__Error:
-    Serial.print("Error");
+    return "Error";
   case Lab_test__Turn90Right:
-    Serial.print("Turn90Right");
+    return "Turn90Right";
   case Lab_test__Turn90Left:
-    Serial.print("Turn90Left");
+    return "Turn90Left";
   case Lab_test__MoveAway:
-    Serial.print("MoveAway");
+    return "MoveAway";
   case Lab_test__MoveCloser:
-    Serial.print("MoveCloser");
+    return "MoveCloser";
   case Lab_test__LeftTurn:
-    Serial.print("LeftTurn");
+    return "LeftTurn";
   case Lab_test__RightTurn:
-    Serial.print("RightTurn");
+    return "RightTurn";
   case Lab_test__LeftTurnSlow:
-    Serial.print("LeftTurnSlow");
+    return "LeftTurnSlow";
   case Lab_test__RightTurnSlow:
-    Serial.print("RightTurnSlow");
+    return "RightTurnSlow";
   case Lab_test__MoveForward:
-    Serial.print("MoveForward");
+    return "MoveForward";
   case Lab_test__TurnRightEnd:
-    Serial.print("TurnRightEnd");
+    return "TurnRightEnd";
   case Lab_test__Stop:
-    Serial.print("Stop");
+    return "Stop";
   case Lab_test__Backwards:
-    Serial.print("Backwards");
+    return "Backwards";
   case Lab_test__Forward:
-    Serial.print("Forward ");
+    return "Forward ";
   default:
-    Serial.print("noState");
+    return "noState";
   }
-  return 0;
 }

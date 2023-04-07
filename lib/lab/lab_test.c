@@ -1,4 +1,4 @@
-/* --- Generated the 7/4/2023 at 11:59 --- */
+/* --- Generated the 7/4/2023 at 12:11 --- */
 /* --- heptagon compiler, version 1.05.00 (compiled thu. jan. 12 12:27:5 CET 2023) --- */
 /* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab_test.ept --- */
 
@@ -563,8 +563,8 @@ void Lab_test__controller_step(float l2, float l1, float m, float r1,
       self->v_100 = ns;
       break;
     case Lab_test__St_2_ObstacleFollowing:
-      right_wheel_St_2_ObstacleFollowing = motorspeed_right_min;
-      left_wheel_St_2_ObstacleFollowing = motorspeed_left_min;
+      right_wheel_St_2_ObstacleFollowing = 0.000000;
+      left_wheel_St_2_ObstacleFollowing = 0.000000;
       direction_St_2_ObstacleFollowing = 0;
       st_St_2_ObstacleFollowing = Lab_test__ObstacleFollowing;
       v_98 = (self->v_97+1.000000);

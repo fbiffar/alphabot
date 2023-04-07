@@ -127,16 +127,16 @@ node controller(l2, l1, m, r1, r2: float;
 
             state WallFollowing 
                 var
-                    front_free, left_front_too_close, left_front_too_far, left_back_too_close, left_back_too_far, left_front_correct, left_back_correct: bool;
+                    front_free, right_front_too_close, right_front_too_far, right_back_too_close, right_back_too_far, right_front_correct, right_back_correct: bool;
 
                 do  
                     front_free           = ir_front;
                     right_front_too_close = not ir_left_f1; (* and not ir_left_f2 *)
                     right_front_too_far   = ir_left_f2;     (* and ir_left_f1 *)
-                    right_front_correct   = not left_front_too_close and not left_front_too_far;
+                    right_front_correct   = not right_front_too_close and not right_front_too_far;
                     right_back_too_close  = not ir_left_b1; (* and not ir_left_b2 *)
                     right_back_too_far    = ir_left_b2;     (* and ir_left_b1 *)
-                    right_back_correct    = not left_back_too_close and not left_back_too_far;
+                    right_back_correct    = not right_back_too_close and not right_back_too_far;
 
                 automaton
 

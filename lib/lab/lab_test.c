@@ -1,4 +1,4 @@
-/* --- Generated the 7/4/2023 at 14:59 --- */
+/* --- Generated the 7/4/2023 at 15:28 --- */
 /* --- heptagon compiler, version 1.05.00 (compiled thu. jan. 12 12:27:5 CET 2023) --- */
 /* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab_test.ept --- */
 
@@ -191,12 +191,12 @@ void Lab_test__controller_step(float l2, float l1, float m, float r1,
   int nr_1;
   int pnr_1;
   int front_free;
-  int left_front_too_close;
-  int left_front_too_far;
-  int left_back_too_close;
-  int left_back_too_far;
-  int left_front_correct;
-  int left_back_correct;
+  int right_front_too_close;
+  int right_front_too_far;
+  int right_back_too_close;
+  int right_back_too_far;
+  int right_front_correct;
+  int right_back_correct;
   float v_98;
   int v_96;
   int v_94;
@@ -613,16 +613,16 @@ void Lab_test__controller_step(float l2, float l1, float m, float r1,
         pnr_1 = self->v_89;
         ck_4 = self->v_69;
       };
-      left_back_too_far = ir_left_b2;
-      v_40 = !(left_back_too_far);
-      left_back_too_close = !(ir_left_b1);
-      v_39 = !(left_back_too_close);
-      left_back_correct = (v_39&&v_40);
-      left_front_too_far = ir_left_f2;
-      v_38 = !(left_front_too_far);
-      left_front_too_close = !(ir_left_f1);
-      v_37 = !(left_front_too_close);
-      left_front_correct = (v_37&&v_38);
+      right_back_too_far = ir_left_b2;
+      v_40 = !(right_back_too_far);
+      right_back_too_close = !(ir_left_b1);
+      v_39 = !(right_back_too_close);
+      right_back_correct = (v_39&&v_40);
+      right_front_too_far = ir_left_f2;
+      v_38 = !(right_front_too_far);
+      right_front_too_close = !(ir_left_f1);
+      v_37 = !(right_front_too_close);
+      right_front_correct = (v_37&&v_38);
       front_free = ir_front;
       nr_2_St_2_WallFollowing = false;
       ns_2_St_2_WallFollowing = Lab_test__St_2_WallFollowing;
@@ -630,7 +630,7 @@ void Lab_test__controller_step(float l2, float l1, float m, float r1,
       nr_2 = nr_2_St_2_WallFollowing;
       switch (ck_4) {
         case Lab_test__St_1_CheckState:
-          v_50 = (left_front_correct&&left_back_correct);
+          v_50 = (right_front_correct&&right_back_correct);
           if (v_50) {
             v_52 = true;
             v_51 = Lab_test__St_1_MoveForward;
@@ -638,39 +638,39 @@ void Lab_test__controller_step(float l2, float l1, float m, float r1,
             v_52 = pnr_1;
             v_51 = Lab_test__St_1_CheckState;
           };
-          v_49 = (left_front_too_far&&left_back_correct);
+          v_49 = (right_front_too_far&&right_back_correct);
           if (v_49) {
             v_54 = true;
-            v_53 = Lab_test__St_1_LeftTurnSlow;
+            v_53 = Lab_test__St_1_RightTurnSlow;
           } else {
             v_54 = v_52;
             v_53 = v_51;
           };
-          v_48 = (left_front_too_close&&left_back_correct);
+          v_48 = (right_front_too_close&&right_back_correct);
           if (v_48) {
             v_56 = true;
-            v_55 = Lab_test__St_1_RightTurnSlow;
+            v_55 = Lab_test__St_1_LeftTurnSlow;
           } else {
             v_56 = v_54;
             v_55 = v_53;
           };
-          v_47 = (left_front_correct&&left_back_too_far);
+          v_47 = (right_front_correct&&right_back_too_far);
           if (v_47) {
             v_58 = true;
-            v_57 = Lab_test__St_1_RightTurnSlow;
+            v_57 = Lab_test__St_1_LeftTurnSlow;
           } else {
             v_58 = v_56;
             v_57 = v_55;
           };
-          v_46 = (left_front_correct&&left_back_too_close);
+          v_46 = (right_front_correct&&right_back_too_close);
           if (v_46) {
             v_60 = true;
-            v_59 = Lab_test__St_1_LeftTurnSlow;
+            v_59 = Lab_test__St_1_RightTurnSlow;
           } else {
             v_60 = v_58;
             v_59 = v_57;
           };
-          v_45 = (left_front_too_far&&left_back_too_far);
+          v_45 = (right_front_too_far&&right_back_too_far);
           if (v_45) {
             v_62 = true;
             v_61 = Lab_test__St_1_MoveCloser;
@@ -678,26 +678,26 @@ void Lab_test__controller_step(float l2, float l1, float m, float r1,
             v_62 = v_60;
             v_61 = v_59;
           };
-          v_44 = (left_front_too_far&&left_back_too_close);
+          v_44 = (right_front_too_far&&right_back_too_close);
           if (v_44) {
             v_64 = true;
-            v_63 = Lab_test__St_1_LeftTurn;
+            v_63 = Lab_test__St_1_RightTurn;
           } else {
             v_64 = v_62;
             v_63 = v_61;
           };
-          v_43 = (left_front_too_close&&left_back_too_far);
+          v_43 = (right_front_too_close&&right_back_too_close);
           if (v_43) {
             v_66 = true;
-            v_65 = Lab_test__St_1_RightTurn;
+            v_65 = Lab_test__St_1_MoveAway;
           } else {
             v_66 = v_64;
             v_65 = v_63;
           };
-          v_42 = (left_front_too_close&&left_back_too_close);
+          v_42 = (right_front_too_close&&right_back_too_far);
           if (v_42) {
             v_68 = true;
-            v_67 = Lab_test__St_1_MoveAway;
+            v_67 = Lab_test__St_1_LeftTurn;
           } else {
             v_68 = v_66;
             v_67 = v_65;

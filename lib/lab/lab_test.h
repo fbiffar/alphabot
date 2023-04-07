@@ -1,4 +1,4 @@
-/* --- Generated the 7/4/2023 at 13:3 --- */
+/* --- Generated the 7/4/2023 at 14:59 --- */
 /* --- heptagon compiler, version 1.05.00 (compiled thu. jan. 12 12:27:5 CET 2023) --- */
 /* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab_test.ept --- */
 
@@ -71,6 +71,7 @@ void Lab_test__controller_step(float l2, float l1, float m, float r1,
                                float motorspeed_left_parking,
                                float motorspeed_right_parking,
                                float basespeed_parking,
+                               float basespeed_obstacle,
                                float last_forward_mm,
                                Lab_test__controller_out* _out,
                                Lab_test__controller_mem* self);

@@ -1,4 +1,4 @@
-/* --- Generated the 7/4/2023 at 13:3 --- */
+/* --- Generated the 7/4/2023 at 14:59 --- */
 /* --- heptagon compiler, version 1.05.00 (compiled thu. jan. 12 12:27:5 CET 2023) --- */
 /* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab_test.ept --- */
 
@@ -50,6 +50,7 @@ int main(int argc, char** argv) {
   float motorspeed_left_parking;
   float motorspeed_right_parking;
   float basespeed_parking;
+  float basespeed_obstacle;
   float last_forward_mm;
   Lab_test__controller_out _res;
   char buf_3[20];
@@ -218,6 +219,10 @@ int main(int argc, char** argv) {
       return 0;
     };;
     
+    if ((scanf("%f", &basespeed_obstacle)==EOF)) {
+      return 0;
+    };;
+    
     if ((scanf("%f", &last_forward_mm)==EOF)) {
       return 0;
     };;
@@ -237,7 +242,8 @@ int main(int argc, char** argv) {
                               min_parking_space, stop_threshold,
                               motorspeed_left_parking,
                               motorspeed_right_parking, basespeed_parking,
-                              last_forward_mm, &_res, &mem);
+                              basespeed_obstacle, last_forward_mm, &_res,
+                              &mem);
     printf("%f\n", _res.left_wheel);
     printf("%f\n", _res.right_wheel);
     printf("%d\n", _res.direction);

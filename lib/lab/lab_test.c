@@ -1,4 +1,4 @@
-/* --- Generated the 7/4/2023 at 13:3 --- */
+/* --- Generated the 7/4/2023 at 14:59 --- */
 /* --- heptagon compiler, version 1.05.00 (compiled thu. jan. 12 12:27:5 CET 2023) --- */
 /* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab_test.ept --- */
 
@@ -48,6 +48,7 @@ void Lab_test__controller_step(float l2, float l1, float m, float r1,
                                float motorspeed_left_parking,
                                float motorspeed_right_parking,
                                float basespeed_parking,
+                               float basespeed_obstacle,
                                float last_forward_mm,
                                Lab_test__controller_out* _out,
                                Lab_test__controller_mem* self) {
@@ -780,7 +781,7 @@ void Lab_test__controller_step(float l2, float l1, float m, float r1,
           nr_1 = nr_1_St_1_CheckState;
           break;
         case Lab_test__St_1_Turn90Left:
-          right_wheel_St_2_WallFollowing_St_1_Turn90Left = basespeed_right;
+          right_wheel_St_2_WallFollowing_St_1_Turn90Left = basespeed_obstacle;
           left_wheel_St_2_WallFollowing_St_1_Turn90Left = 0.000000;
           direction_St_2_WallFollowing_St_1_Turn90Left = 3;
           st_St_2_WallFollowing_St_1_Turn90Left = Lab_test__Turn90Left;
@@ -814,8 +815,8 @@ void Lab_test__controller_step(float l2, float l1, float m, float r1,
           nr_1 = nr_1_St_1_Turn90Left;
           break;
         case Lab_test__St_1_MoveAway:
-          right_wheel_St_2_WallFollowing_St_1_MoveAway = basespeed_right;
-          v_80 = (basespeed_left-motorspeed_left_min);
+          right_wheel_St_2_WallFollowing_St_1_MoveAway = basespeed_obstacle;
+          v_80 = (basespeed_obstacle-motorspeed_left_min);
           v_81 = (v_80*move_closer_left);
           left_wheel_St_2_WallFollowing_St_1_MoveAway = (motorspeed_left_min+v_81);
           direction_St_2_WallFollowing_St_1_MoveAway = 2;
@@ -838,10 +839,10 @@ void Lab_test__controller_step(float l2, float l1, float m, float r1,
           nr_1 = nr_1_St_1_MoveAway;
           break;
         case Lab_test__St_1_MoveCloser:
-          v_78 = (basespeed_right-motorspeed_right_min);
+          v_78 = (basespeed_obstacle-motorspeed_right_min);
           v_79 = (v_78*move_away_right);
           right_wheel_St_2_WallFollowing_St_1_MoveCloser = (motorspeed_right_min+v_79);
-          left_wheel_St_2_WallFollowing_St_1_MoveCloser = basespeed_left;
+          left_wheel_St_2_WallFollowing_St_1_MoveCloser = basespeed_obstacle;
           direction_St_2_WallFollowing_St_1_MoveCloser = 3;
           st_St_2_WallFollowing_St_1_MoveCloser = Lab_test__MoveCloser;
           if (true) {
@@ -958,8 +959,8 @@ void Lab_test__controller_step(float l2, float l1, float m, float r1,
           nr_1 = nr_1_St_1_LeftTurnSlow;
           break;
         case Lab_test__St_1_MoveForward:
-          right_wheel_St_2_WallFollowing_St_1_MoveForward = basespeed_right;
-          left_wheel_St_2_WallFollowing_St_1_MoveForward = basespeed_left;
+          right_wheel_St_2_WallFollowing_St_1_MoveForward = basespeed_obstacle;
+          left_wheel_St_2_WallFollowing_St_1_MoveForward = basespeed_obstacle;
           direction_St_2_WallFollowing_St_1_MoveForward = 1;
           st_St_2_WallFollowing_St_1_MoveForward = Lab_test__MoveForward;
           if (true) {

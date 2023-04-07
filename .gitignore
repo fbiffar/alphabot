@@ -6,3 +6,9 @@
 lib/lab/other/lab.epci
 lib/lab/other/lab.log
 lib/lab/other/lab.mls
+lib/lab/other/lab_c/*
+
+lib/lab/other/lab_test.epci
+lib/lab/other/lab_test.log
+lib/lab/other/lab_test.mls
+lib/lab/other/lab_test_c/*

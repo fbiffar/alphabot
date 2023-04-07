@@ -92,17 +92,9 @@ node controller(l2, l1, m, r1, r2: float;
                                                else 0.0;
 
                             st          = OnLine;
-                            direction   = 1;
-                            left_wheel  = if correction >. (motorspeed_left_max -. basespeed_left)
-                                          then motorspeed_left_max
-                                          else (if correction <. (motorspeed_left_min -. basespeed_left)
-                                          then motorspeed_left_min
-                                          else basespeed_left +. correction);
-                            right_wheel = if correction >. (basespeed_right -. motorspeed_right_min)
-                                          then motorspeed_right_min
-                                          else (if correction <. (basespeed_right -. motorspeed_right_max)
-                                          then motorspeed_right_max
-                                          else basespeed_right -. correction);
+                            direction   = 0;
+                            left_wheel  = 0.0;
+                            right_wheel = 0.0;
                             (*white_line = if (r2+l2)/2 >. to_black_threshold and m >. line_threshold_white then false else pre(white_line)*)
                             (*white_line = if (r2+l2)/2 <. to_white_threshold and m <. line_threshold_black then true else pre(white_line)*)
                         unless left_line then LostLine

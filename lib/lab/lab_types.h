@@ -1,67 +1,83 @@
-/* --- Generated the 30/3/2023 at 15:58 --- */
+/* --- Generated the 7/4/2023 at 10:18 --- */
 /* --- heptagon compiler, version 1.05.00 (compiled thu. jan. 12 12:27:5 CET 2023) --- */
-/* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab.ept --- */
+/* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab_test.ept --- */
 
-#ifndef LAB_TYPES_H
-#define LAB_TYPES_H
+#ifndef LAB_TEST_TYPES_H
+#define LAB_TEST_TYPES_H
 
 #include "stdbool.h"
 #include "assert.h"
-//#include "pervasives.h"
+#include "pervasives.h"
 typedef enum {
-  Lab__St_2_WallFollowing,
-  Lab__St_2_TurnRightEnd,
-  Lab__St_2_ObstacleFollowing,
-  Lab__St_2_LineFollow
-} Lab__st_2;
+  Lab_test__St_3_WallFollowing,
+  Lab_test__St_3_TurnRightEnd,
+  Lab_test__St_3_Stop,
+  Lab_test__St_3_Parking,
+  Lab_test__St_3_ObstacleFollowing,
+  Lab_test__St_3_LineFollow
+} Lab_test__st_3;
 
-Lab__st_2 Lab__st_2_of_string(char* s);
+Lab_test__st_3 Lab_test__st_3_of_string(char* s);
 
-char* string_of_Lab__st_2(Lab__st_2 x, char* buf);
-
-typedef enum {
-  Lab__St_1_Turn90Right,
-  Lab__St_1_RightTurnSlow,
-  Lab__St_1_RightTurn,
-  Lab__St_1_MoveForward,
-  Lab__St_1_MoveCloser,
-  Lab__St_1_MoveAway,
-  Lab__St_1_LeftTurnSlow,
-  Lab__St_1_LeftTurn,
-  Lab__St_1_CheckState
-} Lab__st_1;
-
-Lab__st_1 Lab__st_1_of_string(char* s);
-
-char* string_of_Lab__st_1(Lab__st_1 x, char* buf);
+char* string_of_Lab_test__st_3(Lab_test__st_3 x, char* buf);
 
 typedef enum {
-  Lab__St_OnLine,
-  Lab__St_LostLine
-} Lab__st;
+  Lab_test__St_2_Turn90Right,
+  Lab_test__St_2_Forward,
+  Lab_test__St_2_Backwards
+} Lab_test__st_2;
 
-Lab__st Lab__st_of_string(char* s);
+Lab_test__st_2 Lab_test__st_2_of_string(char* s);
 
-char* string_of_Lab__st(Lab__st x, char* buf);
+char* string_of_Lab_test__st_2(Lab_test__st_2 x, char* buf);
 
 typedef enum {
-  Lab__OnLine,
-  Lab__LostLine,
-  Lab__ObstacleFollowing,
-  Lab__Error,
-  Lab__Turn90Right,
-  Lab__MoveAway,
-  Lab__MoveCloser,
-  Lab__LeftTurn,
-  Lab__RightTurn,
-  Lab__LeftTurnSlow,
-  Lab__RightTurnSlow,
-  Lab__MoveForward,
-  Lab__TurnRightEnd
-} Lab__stateName;
+  Lab_test__St_1_Turn90Left,
+  Lab_test__St_1_RightTurnSlow,
+  Lab_test__St_1_RightTurn,
+  Lab_test__St_1_MoveForward,
+  Lab_test__St_1_MoveCloser,
+  Lab_test__St_1_MoveAway,
+  Lab_test__St_1_LeftTurnSlow,
+  Lab_test__St_1_LeftTurn,
+  Lab_test__St_1_CheckState
+} Lab_test__st_1;
 
-Lab__stateName Lab__stateName_of_string(char* s);
+Lab_test__st_1 Lab_test__st_1_of_string(char* s);
 
-char* string_of_Lab__stateName(Lab__stateName x, char* buf);
+char* string_of_Lab_test__st_1(Lab_test__st_1 x, char* buf);
 
-#endif // LAB_TYPES_H
+typedef enum {
+  Lab_test__St_OnLine,
+  Lab_test__St_LostLine
+} Lab_test__st;
+
+Lab_test__st Lab_test__st_of_string(char* s);
+
+char* string_of_Lab_test__st(Lab_test__st x, char* buf);
+
+typedef enum {
+  Lab_test__OnLine,
+  Lab_test__LostLine,
+  Lab_test__ObstacleFollowing,
+  Lab_test__Error,
+  Lab_test__Turn90Right,
+  Lab_test__Turn90Left,
+  Lab_test__MoveAway,
+  Lab_test__MoveCloser,
+  Lab_test__LeftTurn,
+  Lab_test__RightTurn,
+  Lab_test__LeftTurnSlow,
+  Lab_test__RightTurnSlow,
+  Lab_test__MoveForward,
+  Lab_test__TurnRightEnd,
+  Lab_test__Stop,
+  Lab_test__Backwards,
+  Lab_test__Forward
+} Lab_test__stateName;
+
+Lab_test__stateName Lab_test__stateName_of_string(char* s);
+
+char* string_of_Lab_test__stateName(Lab_test__stateName x, char* buf);
+
+#endif // LAB_TEST_TYPES_H

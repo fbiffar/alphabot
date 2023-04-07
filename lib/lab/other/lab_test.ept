@@ -108,9 +108,6 @@ node controller(l2, l1, m, r1, r2: float;
                             right_wheel = 0.0;
                     unless not left_m then OnLine
                 end
-            (* robot is on black line and parking process starts *)
-            until  white_line = false and parking_distance >=. min_parking_space then Parking
-            |      white_line = false and (l1 >. stop_threshold) and (m >. stop_threshold)  and (r1 >. stop_threshold) then Stop
             (* change state if robot detects an obstale in front *)
             unless not ir_front then ObstacleFollowing
 

@@ -1,4 +1,4 @@
-/* --- Generated the 7/4/2023 at 11:35 --- */
+/* --- Generated the 7/4/2023 at 11:59 --- */
 /* --- heptagon compiler, version 1.05.00 (compiled thu. jan. 12 12:27:5 CET 2023) --- */
 /* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab_test.ept --- */
 
@@ -7,75 +7,28 @@
 #include <stdlib.h>
 #include "lab_test_types.h"
 
-Lab_test__st_3 Lab_test__st_3_of_string(char* s) {
-  if ((strcmp(s, "St_3_WallFollowing")==0)) {
-    return Lab_test__St_3_WallFollowing;
-  };
-  if ((strcmp(s, "St_3_TurnRightEnd")==0)) {
-    return Lab_test__St_3_TurnRightEnd;
-  };
-  if ((strcmp(s, "St_3_Stop")==0)) {
-    return Lab_test__St_3_Stop;
-  };
-  if ((strcmp(s, "St_3_Parking")==0)) {
-    return Lab_test__St_3_Parking;
-  };
-  if ((strcmp(s, "St_3_ObstacleFollowing")==0)) {
-    return Lab_test__St_3_ObstacleFollowing;
-  };
-  if ((strcmp(s, "St_3_LineFollow")==0)) {
-    return Lab_test__St_3_LineFollow;
-  };
-}
-
-char* string_of_Lab_test__st_3(Lab_test__st_3 x, char* buf) {
-  switch (x) {
-    case Lab_test__St_3_WallFollowing:
-      strcpy(buf, "St_3_WallFollowing");
-      break;
-    case Lab_test__St_3_TurnRightEnd:
-      strcpy(buf, "St_3_TurnRightEnd");
-      break;
-    case Lab_test__St_3_Stop:
-      strcpy(buf, "St_3_Stop");
-      break;
-    case Lab_test__St_3_Parking:
-      strcpy(buf, "St_3_Parking");
-      break;
-    case Lab_test__St_3_ObstacleFollowing:
-      strcpy(buf, "St_3_ObstacleFollowing");
-      break;
-    case Lab_test__St_3_LineFollow:
-      strcpy(buf, "St_3_LineFollow");
-      break;
-    default:
-      break;
-  };
-  return buf;
-}
-
 Lab_test__st_2 Lab_test__st_2_of_string(char* s) {
-  if ((strcmp(s, "St_2_Turn90Right")==0)) {
-    return Lab_test__St_2_Turn90Right;
+  if ((strcmp(s, "St_2_WallFollowing")==0)) {
+    return Lab_test__St_2_WallFollowing;
   };
-  if ((strcmp(s, "St_2_Forward")==0)) {
-    return Lab_test__St_2_Forward;
+  if ((strcmp(s, "St_2_ObstacleFollowing")==0)) {
+    return Lab_test__St_2_ObstacleFollowing;
   };
-  if ((strcmp(s, "St_2_Backwards")==0)) {
-    return Lab_test__St_2_Backwards;
+  if ((strcmp(s, "St_2_LineFollow")==0)) {
+    return Lab_test__St_2_LineFollow;
   };
 }
 
 char* string_of_Lab_test__st_2(Lab_test__st_2 x, char* buf) {
   switch (x) {
-    case Lab_test__St_2_Turn90Right:
-      strcpy(buf, "St_2_Turn90Right");
+    case Lab_test__St_2_WallFollowing:
+      strcpy(buf, "St_2_WallFollowing");
       break;
-    case Lab_test__St_2_Forward:
-      strcpy(buf, "St_2_Forward");
+    case Lab_test__St_2_ObstacleFollowing:
+      strcpy(buf, "St_2_ObstacleFollowing");
       break;
-    case Lab_test__St_2_Backwards:
-      strcpy(buf, "St_2_Backwards");
+    case Lab_test__St_2_LineFollow:
+      strcpy(buf, "St_2_LineFollow");
       break;
     default:
       break;

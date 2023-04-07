@@ -63,13 +63,13 @@ float line_threshold_black = 60.0;
 // waiting time
 float waiting_threshold = 10;
 
-//parking 
+// parking
 
 float min_parking_space = 300;
 float stop_threshold = 60;
-float motorspeed_left_parking = 80; 
-float motorspeed_right_parking = 60; 
-float basespeed_parking = 80; 
+float motorspeed_left_parking = 80;
+float motorspeed_right_parking = 60;
+float basespeed_parking = 80;
 float last_forward_mm = 300;
 
 void setup()
@@ -120,31 +120,29 @@ int main(int argc, char **argv)
 
     // run heptagon code
     Lab_test__controller_step((float)TR_sensor[0], (float)TR_sensor[1], (float)TR_sensor[2], (float)TR_sensor[3], (float)TR_sensor[4], // (float l2, float l1, float m, float r1, float r2
-                         (int)IR_sensor[0], (int)IR_sensor[1], (int)IR_sensor[2], (int)IR_sensor[3], (int)IR_sensor[4],    // int ir_front, int ir_left_f1, int ir_left_f2,int ir_left_b1, int ir_left_b2,
-                         outer_sensors_weight,
-                         backward_factor, basespeed_left, basespeed_right,
-                         motorspeed_left_max, motorspeed_left_min,
-                         motorspeed_right_max, motorspeed_right_min,
-                         Kp, Ki, Kd,
-                         d_encoder_steps_left, d_encoder_steps_right,
-                         white_line, line_threshold_white, line_threshold_black, waiting_threshold,
-                         move_away_right,
-                         move_closer_left,
-                         right_turn_left,
-                         left_turn_right,
-                         right_turn_slow_left,
-                         left_turn_slow_right,
-                         turn_right_end_right,
-                         min_parking_space,
-                         stop_threshold,
-                         motorspeed_left_parking,
-                         motorspeed_right_parking,
-                         basespeed_parking, 
-                         last_forward_mm,
-                         &_out,
-                         &mem);
-
-
+                              (int)IR_sensor[0], (int)IR_sensor[1], (int)IR_sensor[2], (int)IR_sensor[3], (int)IR_sensor[4],           // int ir_front, int ir_left_f1, int ir_left_f2,int ir_left_b1, int ir_left_b2,
+                              outer_sensors_weight,
+                              backward_factor, basespeed_left, basespeed_right,
+                              motorspeed_left_max, motorspeed_left_min,
+                              motorspeed_right_max, motorspeed_right_min,
+                              Kp, Ki, Kd,
+                              d_encoder_steps_left, d_encoder_steps_right,
+                              white_line, line_threshold_white, line_threshold_black, waiting_threshold,
+                              move_away_right,
+                              move_closer_left,
+                              right_turn_left,
+                              left_turn_right,
+                              right_turn_slow_left,
+                              left_turn_slow_right,
+                              turn_right_end_right,
+                              min_parking_space,
+                              stop_threshold,
+                              motorspeed_left_parking,
+                              motorspeed_right_parking,
+                              basespeed_parking,
+                              last_forward_mm,
+                              &_out,
+                              &mem);
 
     // extract output
     int LS = (int)_out.left_wheel;
@@ -157,7 +155,7 @@ int main(int argc, char **argv)
     Serial.print("\t");
     // Serial.print(direction);
     // Serial.print("\t");
-    // // // Serial.print(_out -> st);
+    print_enum(_out->st);
     Serial.print("\n");
 
     // give motorspeeds to robo
@@ -175,4 +173,48 @@ ISR(INT0_vect) // interrupt handle for left -> is in main file ?
 ISR(INT1_vect) // interrupt handle for right -> is in main file ?
 {
   steps_left++;
+}
+
+int print_enum(enum Lab_test__stateName state)
+{
+  switch (state)
+  {
+  case Lab_test__OnLine:
+    Serial.print("OnLine");
+  case Lab_test__LostLine:
+    Serial.print("LostLine");
+  case Lab_test__ObstacleFollowing:
+    Serial.print("ObstacleFollowing");
+  case Lab_test__Error:
+    Serial.print("Error");
+  case Lab_test__Turn90Right:
+    Serial.print("Turn90Right");
+  case Lab_test__Turn90Left:
+    Serial.print("Turn90Left");
+  case Lab_test__MoveAway:
+    Serial.print("MoveAway");
+  case Lab_test__MoveCloser:
+    Serial.print("MoveCloser");
+  case Lab_test__LeftTurn:
+    Serial.print("LeftTurn");
+  case Lab_test__RightTurn:
+    Serial.print("RightTurn");
+  case Lab_test__LeftTurnSlow:
+    Serial.print("LeftTurnSlow");
+  case Lab_test__RightTurnSlow:
+    Serial.print("RightTurnSlow");
+  case Lab_test__MoveForward:
+    Serial.print("MoveForward");
+  case Lab_test__TurnRightEnd:
+    Serial.print("TurnRightEnd");
+  case Lab_test__Stop:
+    Serial.print("Stop");
+  case Lab_test__Backwards:
+    Serial.print("Backwards");
+  case Lab_test__Forward:
+    Serial.print("Forward ");
+  default:
+    Serial.print("noState");
+  }
+  return 0;
 }

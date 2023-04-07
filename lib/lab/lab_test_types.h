@@ -1,4 +1,4 @@
-/* --- Generated the 7/4/2023 at 11:35 --- */
+/* --- Generated the 7/4/2023 at 11:59 --- */
 /* --- heptagon compiler, version 1.05.00 (compiled thu. jan. 12 12:27:5 CET 2023) --- */
 /* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab_test.ept --- */
 
@@ -7,24 +7,11 @@
 
 #include "stdbool.h"
 #include "assert.h"
-
+#include "pervasives.h"
 typedef enum {
-  Lab_test__St_3_WallFollowing,
-  Lab_test__St_3_TurnRightEnd,
-  Lab_test__St_3_Stop,
-  Lab_test__St_3_Parking,
-  Lab_test__St_3_ObstacleFollowing,
-  Lab_test__St_3_LineFollow
-} Lab_test__st_3;
-
-Lab_test__st_3 Lab_test__st_3_of_string(char* s);
-
-char* string_of_Lab_test__st_3(Lab_test__st_3 x, char* buf);
-
-typedef enum {
-  Lab_test__St_2_Turn90Right,
-  Lab_test__St_2_Forward,
-  Lab_test__St_2_Backwards
+  Lab_test__St_2_WallFollowing,
+  Lab_test__St_2_ObstacleFollowing,
+  Lab_test__St_2_LineFollow
 } Lab_test__st_2;
 
 Lab_test__st_2 Lab_test__st_2_of_string(char* s);

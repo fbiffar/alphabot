@@ -1,4 +1,4 @@
-/* --- Generated the 7/4/2023 at 12:11 --- */
+/* --- Generated the 7/4/2023 at 12:51 --- */
 /* --- heptagon compiler, version 1.05.00 (compiled thu. jan. 12 12:27:5 CET 2023) --- */
 /* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab_test.ept --- */
 
@@ -8,17 +8,19 @@
 #include "stdbool.h"
 #include "assert.h"
 
-typedef enum {
+typedef enum
+{
   Lab_test__St_2_WallFollowing,
   Lab_test__St_2_ObstacleFollowing,
   Lab_test__St_2_LineFollow
 } Lab_test__st_2;
 
-Lab_test__st_2 Lab_test__st_2_of_string(char* s);
+Lab_test__st_2 Lab_test__st_2_of_string(char *s);
 
-char* string_of_Lab_test__st_2(Lab_test__st_2 x, char* buf);
+char *string_of_Lab_test__st_2(Lab_test__st_2 x, char *buf);
 
-typedef enum {
+typedef enum
+{
   Lab_test__St_1_Turn90Left,
   Lab_test__St_1_RightTurnSlow,
   Lab_test__St_1_RightTurn,
@@ -30,20 +32,22 @@ typedef enum {
   Lab_test__St_1_CheckState
 } Lab_test__st_1;
 
-Lab_test__st_1 Lab_test__st_1_of_string(char* s);
+Lab_test__st_1 Lab_test__st_1_of_string(char *s);
 
-char* string_of_Lab_test__st_1(Lab_test__st_1 x, char* buf);
+char *string_of_Lab_test__st_1(Lab_test__st_1 x, char *buf);
 
-typedef enum {
+typedef enum
+{
   Lab_test__St_OnLine,
   Lab_test__St_LostLine
 } Lab_test__st;
 
-Lab_test__st Lab_test__st_of_string(char* s);
+Lab_test__st Lab_test__st_of_string(char *s);
 
-char* string_of_Lab_test__st(Lab_test__st x, char* buf);
+char *string_of_Lab_test__st(Lab_test__st x, char *buf);
 
-typedef enum {
+typedef enum
+{
   Lab_test__OnLine,
   Lab_test__LostLine,
   Lab_test__ObstacleFollowing,
@@ -63,8 +67,8 @@ typedef enum {
   Lab_test__Forward
 } Lab_test__stateName;
 
-Lab_test__stateName Lab_test__stateName_of_string(char* s);
+Lab_test__stateName Lab_test__stateName_of_string(char *s);
 
-char* string_of_Lab_test__stateName(Lab_test__stateName x, char* buf);
+char *string_of_Lab_test__stateName(Lab_test__stateName x, char *buf);
 
 #endif // LAB_TEST_TYPES_H

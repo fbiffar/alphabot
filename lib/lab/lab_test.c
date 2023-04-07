@@ -1,4 +1,4 @@
-/* --- Generated the 7/4/2023 at 12:11 --- */
+/* --- Generated the 7/4/2023 at 12:51 --- */
 /* --- heptagon compiler, version 1.05.00 (compiled thu. jan. 12 12:27:5 CET 2023) --- */
 /* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab_test.ept --- */
 
@@ -622,7 +622,7 @@ void Lab_test__controller_step(float l2, float l1, float m, float r1,
       left_front_too_close = !(ir_left_f1);
       v_37 = !(left_front_too_close);
       left_front_correct = (v_37&&v_38);
-      front_free = !(ir_front);
+      front_free = ir_front;
       nr_2_St_2_WallFollowing = false;
       ns_2_St_2_WallFollowing = Lab_test__St_2_WallFollowing;
       ns_2 = ns_2_St_2_WallFollowing;

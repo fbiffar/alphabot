@@ -1,5 +1,5 @@
-/* --- Generated the 8/4/2023 at 14:47 --- */
-/* --- heptagon compiler, version 1.05.00 (compiled thu. jan. 12 12:27:5 CET 2023) --- */
+/* --- Generated the 8/4/2023 at 16:56 --- */
+/* --- heptagon compiler, version 1.05.00 (compiled tue. jan. 10 17:5:19 CET 2023) --- */
 /* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab.ept --- */
 
 #ifndef LAB_H
@@ -8,36 +8,41 @@
 #include "lab_types.h"
 typedef struct Lab__controller_mem {
   Lab__st_3 ck;
-  Lab__st_2 v_54;
-  float v_58;
-  int v_55;
-  float v_64;
-  int v_61;
-  int v_67;
-  float v_70;
-  int v_68;
-  Lab__st_1 v_112;
-  int v_129;
-  float v_126;
-  int v_123;
-  int v_133;
-  int away_from_line_1;
+  Lab__st_2 v_63;
+  float v_67;
+  int v_64;
+  float v_73;
+  int v_70;
+  int v_76;
+  float v_79;
+  int v_77;
+  Lab__st_1 v_127;
+  int v_144;
   float v_141;
-  int v_139;
-  Lab__st v_156;
-  float v_160;
-  int v_157;
-  float v_186;
-  int v_181;
-  float v_175;
-  int v_172;
-  float v_170;
-  int v_167;
+  int v_138;
+  int v_148;
+  int v_94;
+  float diff_steps_1;
+  int away_from_line_1;
+  float v_156;
+  int v_154;
+  Lab__st v_173;
+  int v_178;
+  int v_175;
+  float v_183;
+  int v_180;
+  float v_209;
   int v_204;
+  float v_198;
+  int v_195;
+  float v_193;
+  int v_190;
+  int v_227;
   float parking_distance_1;
   int v_36;
   int v_32;
   int pnr_3;
+  int white_t_cross_1;
   int white_line_1;
   int car_to_the_right_1;
   int first_car_1;

@@ -68,12 +68,12 @@ float waiting_threshold = 1000;
 
 // parking
 
-float min_parking_space = 300;
-float stop_threshold = 60;
+float min_parking_space = 200;
+float stop_threshold = 1000;
 float motorspeed_left_parking = 80;
 float motorspeed_right_parking = 60;
 float basespeed_parking = 80;
-float last_forward_mm = 300;
+float last_forward_mm = 50;
 
 
 int print_enum( Lab__stateName state)

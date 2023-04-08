@@ -1,5 +1,5 @@
-/* --- Generated the 8/4/2023 at 14:47 --- */
-/* --- heptagon compiler, version 1.05.00 (compiled thu. jan. 12 12:27:5 CET 2023) --- */
+/* --- Generated the 8/4/2023 at 16:56 --- */
+/* --- heptagon compiler, version 1.05.00 (compiled tue. jan. 10 17:5:19 CET 2023) --- */
 /* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab.ept --- */
 
 #ifndef LAB_TYPES_H
@@ -7,7 +7,6 @@
 
 #include "stdbool.h"
 #include "assert.h"
-
 typedef enum {
   Lab__St_3_WallFollowing,
   Lab__St_3_TurnLeftEnd,
@@ -48,6 +47,7 @@ Lab__st_1 Lab__st_1_of_string(char* s);
 char* string_of_Lab__st_1(Lab__st_1 x, char* buf);
 
 typedef enum {
+  Lab__St_Tcross,
   Lab__St_OnLine,
   Lab__St_LostLine
 } Lab__st;
@@ -73,7 +73,8 @@ typedef enum {
   Lab__TurnLeftEnd,
   Lab__Stop,
   Lab__Backwards,
-  Lab__Forward
+  Lab__Forward,
+  Lab__Tcross
 } Lab__stateName;
 
 Lab__stateName Lab__stateName_of_string(char* s);

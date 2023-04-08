@@ -1,5 +1,5 @@
-/* --- Generated the 8/4/2023 at 14:47 --- */
-/* --- heptagon compiler, version 1.05.00 (compiled thu. jan. 12 12:27:5 CET 2023) --- */
+/* --- Generated the 8/4/2023 at 16:56 --- */
+/* --- heptagon compiler, version 1.05.00 (compiled tue. jan. 10 17:5:19 CET 2023) --- */
 /* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab.ept --- */
 
 #include <stdio.h>
@@ -149,6 +149,9 @@ char* string_of_Lab__st_1(Lab__st_1 x, char* buf) {
 }
 
 Lab__st Lab__st_of_string(char* s) {
+  if ((strcmp(s, "St_Tcross")==0)) {
+    return Lab__St_Tcross;
+  };
   if ((strcmp(s, "St_OnLine")==0)) {
     return Lab__St_OnLine;
   };
@@ -159,6 +162,9 @@ Lab__st Lab__st_of_string(char* s) {
 
 char* string_of_Lab__st(Lab__st x, char* buf) {
   switch (x) {
+    case Lab__St_Tcross:
+      strcpy(buf, "St_Tcross");
+      break;
     case Lab__St_OnLine:
       strcpy(buf, "St_OnLine");
       break;
@@ -223,6 +229,9 @@ Lab__stateName Lab__stateName_of_string(char* s) {
   if ((strcmp(s, "Forward")==0)) {
     return Lab__Forward;
   };
+  if ((strcmp(s, "Tcross")==0)) {
+    return Lab__Tcross;
+  };
 }
 
 char* string_of_Lab__stateName(Lab__stateName x, char* buf) {
@@ -277,6 +286,9 @@ char* string_of_Lab__stateName(Lab__stateName x, char* buf) {
       break;
     case Lab__Forward:
       strcpy(buf, "Forward");
+      break;
+    case Lab__Tcross:
+      strcpy(buf, "Tcross");
       break;
     default:
       break;

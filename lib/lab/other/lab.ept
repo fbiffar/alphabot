@@ -1,4 +1,4 @@
-type stateName = OnLine | LostLine | ObstacleFollowing | Error | Turn90Right |Turn90Left | MoveAway | MoveCloser | LeftTurn | RightTurn | LeftTurnSlow | RightTurnSlow | MoveForward | TurnLeftEnd | Stop | Backwards | Forward
+type stateName = OnLine | LostLine | ObstacleFollowing | Error | Turn90Right |Turn90Left | MoveAway | MoveCloser | LeftTurn | RightTurn | LeftTurnSlow | RightTurnSlow | MoveForward | TurnLeftEnd | Stop | Backwards | Forward | Tcross
 
 (*  l2, l1, m, r1 ,r2 are the 5  white line sensors, 0-4 = black, >7 = white *)
 (*  ir_front:    0° staight to driving direction
@@ -54,6 +54,7 @@ node controller(l2, l1, m, r1, r2: float;
         last first_car:bool;
         last car_to_the_right: bool;
         last white_line: bool = false;
+        last white_t_cross: bool;
 
 
 
@@ -75,6 +76,7 @@ node controller(l2, l1, m, r1, r2: float;
         white_line = if last white_line = true 
                      then (if r2 >. line_threshold_white and l2 >. line_threshold_white and m <. line_threshold_black then false else (last white_line))
                      else (if r2 <. line_threshold_black and l2 <. line_threshold_black and m >. line_threshold_white then true  else (last white_line));
+        white_t_cross = (l2 >. line_threshold_white) and (l1 >. line_threshold_white) and (m >. line_threshold_white) and (r1 >. line_threshold_white) and (r2 >. line_threshold_white) and white_line;
 
 
         
@@ -113,6 +115,7 @@ node controller(l2, l1, m, r1, r2: float;
                                           else basespeed_right -. correction);
 
                        unless left_line then LostLine
+                       | white_t_cross then Tcross
                     state LostLine
                         do (* failstate: try to move robot back to line *)
                             parking_distance = 0.0 -> pre(parking_distance);
@@ -122,6 +125,15 @@ node controller(l2, l1, m, r1, r2: float;
                             left_wheel  = motorspeed_left_min  +. (motorspeed_left_max  -. motorspeed_left_min)  *. backward_factor;
                             right_wheel = motorspeed_right_min +. (motorspeed_right_max -. motorspeed_right_min) *. backward_factor;
                     unless not left_m then OnLine
+                    state Tcross
+                        var counter: int;
+                        do
+                            counter = 0 -> pre(counter) +1;
+                            st          = Tcross;
+                            direction   = 2;
+                            left_wheel  = 0.0;
+                            right_wheel = basespeed_right; 
+                    until counter > 4 then OnLine
                 end
             (* robot is on black line and parking process starts *)
             until  white_line = false and parking_distance >=. min_parking_space then Parking
@@ -147,6 +159,7 @@ node controller(l2, l1, m, r1, r2: float;
                     front_free, right_front_too_close, right_front_too_far, right_back_too_close, right_back_too_far, right_front_correct, right_back_correct: bool;
                     back_online: bool;
                     last away_from_line: bool;
+                    last diff_steps : float ;
                    
                 do  
                     front_free            = ir_front;
@@ -157,6 +170,7 @@ node controller(l2, l1, m, r1, r2: float;
                     right_back_too_far    = ir_left_b2;     (* and ir_left_b1 *)
                     right_back_correct    = not right_back_too_close and not right_back_too_far;
                     back_online = (r1 >. line_threshold_white and m >. line_threshold_white) or (l1 >. line_threshold_white and m >. line_threshold_white);
+                    diff_steps = 0.0 -> if away_from_line then (last diff_steps)+. (d_encoder_steps_left -. d_encoder_steps_right) else (last diff_steps); 
                     
 
                 automaton
@@ -200,6 +214,7 @@ node controller(l2, l1, m, r1, r2: float;
 
                     state MoveAway
                         do (* turn left with left larger fwd movement *)
+
                             st = MoveAway;
                             direction   = 2;
                             left_wheel  = motorspeed_left_min +. (basespeed_obstacle -. motorspeed_left_min) *. move_closer_left;
@@ -255,7 +270,7 @@ node controller(l2, l1, m, r1, r2: float;
                             right_wheel = basespeed_obstacle;
                     until true then CheckState
                 end
-            until back_online and away_from_line then TurnLeftEnd 
+            until back_online and diff_steps >. 30.0 then TurnLeftEnd 
 
             state TurnLeftEnd
                 var 
@@ -263,7 +278,7 @@ node controller(l2, l1, m, r1, r2: float;
                     finished_turn: bool;
                 do (* turn right until robot is alligned with line *)
                     sum_encoder_steps  = 0.0 -> pre(sum_encoder_steps) +. d_encoder_steps_right;       
-                    finished_turn = (204.2 -. 30.0) <. (9.425 *. sum_encoder_steps);
+                    finished_turn = (204.2 ) <. (9.425 *. sum_encoder_steps);
                     st = TurnLeftEnd;
                     direction   = 3;
                     left_wheel  = motorspeed_right_min*. turn_right_end_right;
@@ -318,7 +333,7 @@ node controller(l2, l1, m, r1, r2: float;
                             (* distance of a wheel = (2pi*30mm÷20) * sum_encoder_steps_left *)
                             (*     204.2 < 9.425 * sum_encoder_steps_left *)
                             (* <=> 20 < sum_encoder_steps_left *)
-                            finished_move = last_forward_mm >. (9.425 *. sum_encoder_steps_left);
+                            finished_move = last_forward_mm <. (9.425 *. sum_encoder_steps_left);
                             st            = Forward;
                             direction     = 3;
                             left_wheel    = basespeed_parking;

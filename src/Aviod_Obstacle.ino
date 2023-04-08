@@ -2,8 +2,8 @@
 #include <TRSensor.h>
 #include <AlphaBotC.h>
 #include <Encoder.h>
-#include <lab_test.c>
-#include <lab_test_types.h>
+#include <lab.c>
+#include <lab_types.h>
 
 // sensors
 InfraRed IR;
@@ -12,8 +12,8 @@ AlphaBot Bot;
 Encoder Enc;
 
 // controller
-Lab_test__controller_out _out;
-Lab_test__controller_mem mem;
+Lab__controller_out _out;
+Lab__controller_mem mem;
 
 // Encoder
 int prev_encoder_left = 0;
@@ -62,7 +62,7 @@ float line_threshold_white = 70.0;
 float line_threshold_black = 60.0;
 
 // waiting time
-float waiting_threshold = 10;
+float waiting_threshold = 1000;
 
 //obstacle 
 
@@ -76,59 +76,59 @@ float basespeed_parking = 80;
 float last_forward_mm = 300;
 
 
-int print_enum( Lab_test__stateName state)
+int print_enum( Lab__stateName state)
 {
   switch (state)
   {
-  case Lab_test__OnLine:
+  case Lab__OnLine:
     {Serial.print("OnLine");
     break;}
-  case Lab_test__LostLine:
+  case Lab__LostLine:
     {Serial.print("LostLine");
     break;}
-  case Lab_test__ObstacleFollowing:
+  case Lab__ObstacleFollowing:
     {Serial.print("ObstacleFollowing");
     break;}
-  case Lab_test__Error:
+  case Lab__Error:
     {Serial.print("Error");
     break;}
-  case Lab_test__Turn90Right:
+  case Lab__Turn90Right:
     {Serial.print("Turn90Right");
     break;}
-  case Lab_test__Turn90Left:
+  case Lab__Turn90Left:
     {Serial.print("Turn90Left");
     break;}
-  case Lab_test__MoveAway:
+  case Lab__MoveAway:
     {Serial.print("MoveAway");
     break;}
-  case Lab_test__MoveCloser:
+  case Lab__MoveCloser:
     {Serial.print("MoveCloser");
     break;}
-  case Lab_test__LeftTurn:
+  case Lab__LeftTurn:
     {Serial.print("LeftTurn");
     break;}
-  case Lab_test__RightTurn:
+  case Lab__RightTurn:
     {Serial.print("RightTurn");
     break;}
-  case Lab_test__LeftTurnSlow:
+  case Lab__LeftTurnSlow:
     {Serial.print("LeftTurnSlow");
     break;}
-  case Lab_test__RightTurnSlow:
+  case Lab__RightTurnSlow:
     {Serial.print("RightTurnSlow");
     break;}
-  case Lab_test__MoveForward:
+  case Lab__MoveForward:
     {Serial.print("MoveForward");
     break;}
-  case Lab_test__TurnRightEnd:
+  case Lab__TurnRightEnd:
     {Serial.print("TurnRightEnd");
     break;}
-  case Lab_test__Stop:
+  case Lab__Stop:
     {Serial.print("Stop");
     break;}
-  case Lab_test__Backwards:
+  case Lab__Backwards:
     {Serial.print("Backwards");
     break;}
-  case Lab_test__Forward:
+  case Lab__Forward:
     {Serial.print("Forward ");
     break;}
   default:
@@ -143,7 +143,7 @@ void setup()
   // Initialize sensors
   Serial.begin(115200);
   Serial.print("setup\n");
-  Lab_test__controller_reset(&mem);
+  Lab__controller_reset(&mem);
   IR = InfraRed();
   TR = TRSensor();
   Bot = AlphaBot();
@@ -185,7 +185,7 @@ int main(int argc, char **argv)
     prev_encoder_right = steps_right;
 
     // run heptagon code
-    Lab_test__controller_step((float)TR_sensor[0], (float)TR_sensor[1], (float)TR_sensor[2], (float)TR_sensor[3], (float)TR_sensor[4], // (float l2, float l1, float m, float r1, float r2
+    Lab__controller_step((float)TR_sensor[0], (float)TR_sensor[1], (float)TR_sensor[2], (float)TR_sensor[3], (float)TR_sensor[4], // (float l2, float l1, float m, float r1, float r2
                               (int)IR_sensor[0], (int)IR_sensor[1], (int)IR_sensor[2], (int)IR_sensor[3], (int)IR_sensor[4],           // int ir_front, int ir_left_f1, int ir_left_f2,int ir_left_b1, int ir_left_b2,
                               outer_sensors_weight,
                               backward_factor, basespeed_left, basespeed_right,

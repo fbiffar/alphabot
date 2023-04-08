@@ -1,4 +1,4 @@
-type stateName = OnLine | LostLine | ObstacleFollowing | Error | Turn90Right |Turn90Left | MoveAway | MoveCloser | LeftTurn | RightTurn | LeftTurnSlow | RightTurnSlow | MoveForward | TurnRightEnd | Stop | Backwards | Forward
+type stateName = OnLine | LostLine | ObstacleFollowing | Error | Turn90Right |Turn90Left | MoveAway | MoveCloser | LeftTurn | RightTurn | LeftTurnSlow | RightTurnSlow | MoveForward | TurnLeftEnd | Stop | Backwards | Forward
 
 (*  l2, l1, m, r1 ,r2 are the 5  white line sensors, 0-4 = black, >7 = white *)
 (*  ir_front:    0° staight to driving direction
@@ -251,14 +251,14 @@ node controller(l2, l1, m, r1, r2: float;
                             right_wheel = basespeed_obstacle;
                     until true then CheckState
                 end
-            until not left_line and away_from_line then TurnRightEnd 
+            until not left_line and away_from_line then TurnLeftEnd 
 
-            state TurnRightEnd
+            state TurnLeftEnd
                 do (* turn right until robot is alligned with line *)
-                    st = TurnRightEnd;
+                    st = TurnLeftEnd;
                     direction   = 3;
-                    left_wheel  = basespeed_left;
-                    right_wheel = motorspeed_right_min*. turn_right_end_right;
+                    left_wheel  = motorspeed_right_min*. turn_right_end_right;
+                    right_wheel = basespeed_left;
             unless alligned then LineFollow
 
             state Stop

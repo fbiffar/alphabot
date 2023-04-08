@@ -53,6 +53,9 @@ node controller(l2, l1, m, r1, r2: float;
         last l:float;
         last first_car:bool;
         last car_to_the_right: bool;
+        (*last white_line: bool;*)
+
+
 
     let
         (* check variable whether robot left white line *)
@@ -69,6 +72,9 @@ node controller(l2, l1, m, r1, r2: float;
         l = l1 +. outer_sensor_weight *. l2; (* weighted left  sensors *)
         first_car = false -> (not ir_left_f2) or pre(first_car);
         car_to_the_right = not ir_left_f2;
+        (*white_line = if (r2+l2)/2 >. line_threshold_white and m <. line_threshold_black then false else pre(white_line)*)
+        (*white_line = if (r2+l2)/2 <. line_threshold_black and m >. line_threshold_white then true else pre(white_line)*)
+
 
         
         automaton 
@@ -96,8 +102,7 @@ node controller(l2, l1, m, r1, r2: float;
                             direction   = 0;
                             left_wheel  = 0.0;
                             right_wheel = 0.0;
-                            (*white_line = if (r2+l2)/2 >. to_black_threshold and m >. line_threshold_white then false else pre(white_line)*)
-                            (*white_line = if (r2+l2)/2 <. to_white_threshold and m <. line_threshold_black then true else pre(white_line)*)
+                            
                         unless left_line then LostLine
                     state LostLine
                         do (* failstate: try to move robot back to line *)
@@ -108,6 +113,7 @@ node controller(l2, l1, m, r1, r2: float;
                             left_wheel  = 0.0;
                             right_wheel = 0.0;
                     unless not left_m then OnLine
+                    unless 
                 end
             (* change state if robot detects an obstale in front *)
             unless not ir_front then ObstacleFollowing
@@ -168,7 +174,7 @@ node controller(l2, l1, m, r1, r2: float;
                             (* distance for 90° curve = 2*pi/4 * 130mm = 204.2mm *)
                             (* distance of a wheel = (2pi*30mm÷20) * sum_encoder_steps *)
                             (*     204.2 < 9.425 * sum_encoder_steps *)
-                            finished_turn = 204.2 <. (9.425 *. sum_encoder_steps);
+                            finished_turn = (204.2 -10)  <. (9.425 *. sum_encoder_steps);
                             st            = Turn90Left;
                             direction     = 3;
                             left_wheel    = 0.0;
@@ -212,7 +218,7 @@ node controller(l2, l1, m, r1, r2: float;
                             st = RightTurnSlow;
                             direction   = 3;
                             left_wheel  = motorspeed_left_min +. (motorspeed_left_max -. motorspeed_left_min) *. right_turn_slow_left;
-                            right_wheel = motorspeed_right_min;
+                            right_wheel = 0.0;
                     until true then CheckState
 
                     state LeftTurnSlow

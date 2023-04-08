@@ -54,7 +54,7 @@ float right_turn_left = 0.6;
 float left_turn_right = 0.2;
 float right_turn_slow_left = 0.7;
 float left_turn_slow_right = 0.25;
-float turn_right_end_right = 0.1;
+float turn_right_end_right = 0.0;
 float basespeed_obstacle = 90;
 
 // line thresholds
@@ -119,8 +119,8 @@ int print_enum( Lab__stateName state)
   case Lab__MoveForward:
     {Serial.print("MoveForward");
     break;}
-  case Lab__TurnRightEnd:
-    {Serial.print("TurnRightEnd");
+  case Lab__TurnLeftEnd:
+    {Serial.print("TurnLeftEnd");
     break;}
   case Lab__Stop:
     {Serial.print("Stop");

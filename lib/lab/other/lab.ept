@@ -72,8 +72,8 @@ node controller(l2, l1, m, r1, r2: float;
         l = l1 +. outer_sensor_weight *. l2; (* weighted left  sensors *)
         first_car = false -> (not ir_left_f2 and not white_line) or pre(first_car);
         car_to_the_right = not ir_left_f2;
-        (*white_line = if (r2+l2)/2 >. line_threshold_white and m <. line_threshold_black then false else pre(white_line)*)
-        (*white_line = if (r2+l2)/2 <. line_threshold_black and m >. line_threshold_white then true else pre(white_line)*)
+        (*white_line = if r2 >. line_threshold_white and l2>. line_threshold_white and m <. line_threshold_black then false else (last white_line)*)
+        (*white_line = if r2 <. line_threshold_black and l2 <. line_threshold_black and m >. line_threshold_white then true else (last white_line)*)
 
 
         
@@ -186,7 +186,7 @@ node controller(l2, l1, m, r1, r2: float;
                             (* distance for 90° curve = 2*pi/4 * 130mm = 204.2mm *)
                             (* distance of a wheel = (2pi*30mm÷20) * sum_encoder_steps *)
                             (*     204.2 < 9.425 * sum_encoder_steps *)
-                            finished_turn = (204.2 -. 20.0)  <. (9.425 *. sum_encoder_steps);
+                            finished_turn = (204.2 -. 30.0)  <. (9.425 *. sum_encoder_steps);
                             away_from_line = false -> (last away_from_line) or finished_turn;
                             st            = Turn90Left;
                             direction     = 3;
@@ -254,12 +254,16 @@ node controller(l2, l1, m, r1, r2: float;
             until not left_line and away_from_line then TurnLeftEnd 
 
             state TurnLeftEnd
+                var sum_encoder_steps:  float;
+                    finished_turn: bool;
                 do (* turn right until robot is alligned with line *)
+                    sum_encoder_steps  = 0.0 -> pre(sum_encoder_steps) +. d_encoder_steps_right;       
+                    finished_turn = (204.2 -. 30.0) <. (9.425 *. sum_encoder_steps_left);
                     st = TurnLeftEnd;
                     direction   = 3;
                     left_wheel  = motorspeed_right_min*. turn_right_end_right;
-                    right_wheel = basespeed_left;
-            unless alligned then LineFollow
+                    right_wheel = basespeed_obstacle;
+            unless finished_turn then LineFollow
 
             state Stop
                 do (* stop *)

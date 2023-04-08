@@ -1,4 +1,4 @@
-/* --- Generated the 8/4/2023 at 11:36 --- */
+/* --- Generated the 8/4/2023 at 11:57 --- */
 /* --- heptagon compiler, version 1.05.00 (compiled thu. jan. 12 12:27:5 CET 2023) --- */
 /* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab.ept --- */
 
@@ -15,38 +15,23 @@ typedef struct Lab__controller_mem {
   int v_48;
   int v_54;
   Lab__st_1 v_89;
-  int v_93;
-  int v_90;
-  int v_97;
-  int v_94;
-  int v_103;
-  int v_100;
-  int v_109;
   int v_106;
-  int v_115;
-  int v_112;
-  int v_121;
-  int v_118;
-  int v_125;
-  int v_122;
-  int v_137;
-  int v_134;
-  float v_131;
-  int v_128;
-  int v_139;
-  int away_from_line_1;
-  float v_147;
+  float v_103;
+  int v_100;
+  int v_111;
+  int v_110;
+  float v_119;
+  int v_117;
+  Lab__st v_134;
+  float v_138;
+  int v_135;
+  float v_164;
+  int v_159;
+  float v_153;
+  int v_150;
+  float v_148;
   int v_145;
-  Lab__st v_162;
-  float v_166;
-  int v_163;
-  float v_192;
-  int v_187;
-  float v_181;
-  int v_178;
-  float v_176;
-  int v_173;
-  int v_210;
+  int v_182;
   float parking_distance_1;
   int v_36;
   int v_32;

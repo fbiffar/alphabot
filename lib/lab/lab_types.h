@@ -1,4 +1,4 @@
-/* --- Generated the 8/4/2023 at 11:36 --- */
+/* --- Generated the 8/4/2023 at 11:57 --- */
 /* --- heptagon compiler, version 1.05.00 (compiled thu. jan. 12 12:27:5 CET 2023) --- */
 /* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab.ept --- */
 
@@ -7,7 +7,7 @@
 
 #include "stdbool.h"
 #include "assert.h"
-
+#include "pervasives.h"
 typedef enum {
   Lab__St_3_WallFollowing,
   Lab__St_3_TurnRightEnd,

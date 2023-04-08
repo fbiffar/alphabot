@@ -66,7 +66,7 @@ node controller(l2, l1, m, r1, r2: float;
                     else (l1 <. line_threshold_black) or (m <. line_threshold_black) or (r1 <. line_threshold_black);
         r = r1 +. outer_sensor_weight *. r2; (* weighted right sensors *)
         l = l1 +. outer_sensor_weight *. l2; (* weighted left  sensors *)
-        first_car = false -> (not ir_left_f2) or pre(first_car);
+        first_car = false -> (not ir_left_f2 and not white_line) or pre(first_car);
         car_to_the_right = not ir_left_f2;
 
         
@@ -86,7 +86,7 @@ node controller(l2, l1, m, r1, r2: float;
                             i = error -> (pre(i) +. error);
                             d = error -> (error -. pre(error)); 
                             correction = p*.kP +. i*.kI +. d*.kD;
-                            (* distance of a wheel = (2pi*30mm÷20) * encoder_steps *)
+                            (* distance of one wheel = (2pi*30mm÷20) * encoder_steps *)
                             parking_distance = 0.0 -> if first_car and not car_to_the_right
                                                then pre(parking_distance) +. ((d_encoder_steps_right +. d_encoder_steps_left) /. 2.0) *. 9.425
                                                else 0.0;
@@ -120,7 +120,7 @@ node controller(l2, l1, m, r1, r2: float;
             until  white_line = false and parking_distance >=. min_parking_space then Parking
             |      white_line = false and (l1 >. stop_threshold) and (m >. stop_threshold)  and (r1 >. stop_threshold) then Stop
             (* change state if robot detects an obstale in front *)
-            unless not ir_front then ObstacleFollowing
+            unless white_line = true  and not ir_front then ObstacleFollowing
 
             state ObstacleFollowing
                 var

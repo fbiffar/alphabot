@@ -173,7 +173,7 @@ node controller(l2, l1, m, r1, r2: float;
                             (* distance for 90° curve = 2*pi/4 * 130mm = 204.2mm *)
                             (* distance of a wheel = (2pi*30mm÷20) * sum_encoder_steps *)
                             (*     204.2 < 9.425 * sum_encoder_steps *)
-                            finished_turn = (204.2 -. 10.0)  <. (9.425 *. sum_encoder_steps);
+                            finished_turn = (204.2 -. 20.0)  <. (9.425 *. sum_encoder_steps);
                             st            = Turn90Left;
                             direction     = 3;
                             left_wheel    = 0.0;
@@ -193,7 +193,7 @@ node controller(l2, l1, m, r1, r2: float;
                             st = MoveCloser;
                             direction   = 3;
                             left_wheel  = basespeed_obstacle;
-                            right_wheel = motorspeed_right_min +. (basespeed_obstacle -. motorspeed_right_min) *. move_away_right;
+                            right_wheel = motorspeed_right_min *. move_away_right;
                     until true then CheckState
 
                     state RightTurn

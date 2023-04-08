@@ -53,7 +53,7 @@ node controller(l2, l1, m, r1, r2: float;
         last l:float;
         last first_car:bool;
         last car_to_the_right: bool;
-        last white_line: bool;
+        last white_line: bool = false;
 
 
 
@@ -72,8 +72,9 @@ node controller(l2, l1, m, r1, r2: float;
         l = l1 +. outer_sensor_weight *. l2; (* weighted left  sensors *)
         first_car = false -> (not ir_left_f2 and not white_line) or pre(first_car);
         car_to_the_right = not ir_left_f2;
-        white_line = if r2 >. line_threshold_white and l2>. line_threshold_white and m <. line_threshold_black then false else (last white_line)
-        white_line = if r2 <. line_threshold_black and l2 <. line_threshold_black and m >. line_threshold_white then true else (last white_line)
+        white_line = if last white_line = true 
+                     then (if r2 >. line_threshold_white and l2 >. line_threshold_white and m <. line_threshold_black then false else (last white_line))
+                     else (if r2 <. line_threshold_black and l2 <. line_threshold_black and m >. line_threshold_white then true  else (last white_line));
 
 
         
@@ -144,8 +145,9 @@ node controller(l2, l1, m, r1, r2: float;
             state WallFollowing 
                 var
                     front_free, right_front_too_close, right_front_too_far, right_back_too_close, right_back_too_far, right_front_correct, right_back_correct: bool;
+                    back_online: bool;
                     last away_from_line: bool;
-                    back_online: bool =false; 
+                   
                 do  
                     front_free            = ir_front;
                     right_front_too_close = not ir_left_f1; (* and not ir_left_f2 *)
@@ -154,7 +156,7 @@ node controller(l2, l1, m, r1, r2: float;
                     right_back_too_close  = not ir_left_b1; (* and not ir_left_b2 *)
                     right_back_too_far    = ir_left_b2;     (* and ir_left_b1 *)
                     right_back_correct    = not right_back_too_close and not right_back_too_far;
-                    back_online = (r1 > line_threshold_white and m > line_threshold_white) or (l1 > line_threshold_white and m > line_threshold_white);
+                    back_online = (r1 >. line_threshold_white and m >. line_threshold_white) or (l1 >. line_threshold_white and m >. line_threshold_white);
                     
 
                 automaton

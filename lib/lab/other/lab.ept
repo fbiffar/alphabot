@@ -254,16 +254,17 @@ node controller(l2, l1, m, r1, r2: float;
             until not left_line and away_from_line then TurnLeftEnd 
 
             state TurnLeftEnd
-                var sum_encoder_steps:  float;
+                var 
+                    sum_encoder_steps:  float;
                     finished_turn: bool;
                 do (* turn right until robot is alligned with line *)
                     sum_encoder_steps  = 0.0 -> pre(sum_encoder_steps) +. d_encoder_steps_right;       
-                    finished_turn = (204.2 -. 30.0) <. (9.425 *. sum_encoder_steps_left);
+                    finished_turn = (204.2 -. 30.0) <. (9.425 *. sum_encoder_steps);
                     st = TurnLeftEnd;
                     direction   = 3;
                     left_wheel  = motorspeed_right_min*. turn_right_end_right;
                     right_wheel = basespeed_obstacle;
-            unless finished_turn then LineFollow
+            until finished_turn then LineFollow
 
             state Stop
                 do (* stop *)

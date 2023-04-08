@@ -1,4 +1,4 @@
-/* --- Generated the 8/4/2023 at 11:57 --- */
+/* --- Generated the 8/4/2023 at 12:9 --- */
 /* --- heptagon compiler, version 1.05.00 (compiled thu. jan. 12 12:27:5 CET 2023) --- */
 /* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab.ept --- */
 
@@ -61,8 +61,8 @@ void Lab__controller_step(float l2, float l1, float m, float r1, float r2,
   Lab__st_3 s_3_St_3_Parking;
   int r_5_St_3_Stop;
   Lab__st_3 s_3_St_3_Stop;
-  int r_5_St_3_TurnRightEnd;
-  Lab__st_3 s_3_St_3_TurnRightEnd;
+  int r_5_St_3_TurnLeftEnd;
+  Lab__st_3 s_3_St_3_TurnLeftEnd;
   int r_5_St_3_WallFollowing;
   Lab__st_3 s_3_St_3_WallFollowing;
   int r_5_St_3_ObstacleFollowing;
@@ -368,12 +368,12 @@ void Lab__controller_step(float l2, float l1, float m, float r1, float r2,
   int direction_St_3_Stop;
   float right_wheel_St_3_Stop;
   float left_wheel_St_3_Stop;
-  int nr_3_St_3_TurnRightEnd;
-  Lab__st_3 ns_3_St_3_TurnRightEnd;
-  Lab__stateName st_St_3_TurnRightEnd;
-  int direction_St_3_TurnRightEnd;
-  float right_wheel_St_3_TurnRightEnd;
-  float left_wheel_St_3_TurnRightEnd;
+  int nr_3_St_3_TurnLeftEnd;
+  Lab__st_3 ns_3_St_3_TurnLeftEnd;
+  Lab__stateName st_St_3_TurnLeftEnd;
+  int direction_St_3_TurnLeftEnd;
+  float right_wheel_St_3_TurnLeftEnd;
+  float left_wheel_St_3_TurnLeftEnd;
   int nr_3_St_3_WallFollowing;
   Lab__st_3 ns_3_St_3_WallFollowing;
   Lab__stateName st_St_3_WallFollowing;
@@ -526,16 +526,16 @@ void Lab__controller_step(float l2, float l1, float m, float r1, float r2,
       s_3 = s_3_St_3_WallFollowing;
       r_5 = r_5_St_3_WallFollowing;
       break;
-    case Lab__St_3_TurnRightEnd:
+    case Lab__St_3_TurnLeftEnd:
       if (alligned) {
-        r_5_St_3_TurnRightEnd = true;
-        s_3_St_3_TurnRightEnd = Lab__St_3_LineFollow;
+        r_5_St_3_TurnLeftEnd = true;
+        s_3_St_3_TurnLeftEnd = Lab__St_3_LineFollow;
       } else {
-        r_5_St_3_TurnRightEnd = self->pnr_3;
-        s_3_St_3_TurnRightEnd = Lab__St_3_TurnRightEnd;
+        r_5_St_3_TurnLeftEnd = self->pnr_3;
+        s_3_St_3_TurnLeftEnd = Lab__St_3_TurnLeftEnd;
       };
-      s_3 = s_3_St_3_TurnRightEnd;
-      r_5 = r_5_St_3_TurnRightEnd;
+      s_3 = s_3_St_3_TurnLeftEnd;
+      r_5 = r_5_St_3_TurnLeftEnd;
       break;
     case Lab__St_3_Stop:
       r_5_St_3_Stop = self->pnr_3;
@@ -1208,7 +1208,7 @@ void Lab__controller_step(float l2, float l1, float m, float r1, float r2,
       v_56 = (v_55&&away_from_line);
       if (v_56) {
         nr_3_St_3_WallFollowing = true;
-        ns_3_St_3_WallFollowing = Lab__St_3_TurnRightEnd;
+        ns_3_St_3_WallFollowing = Lab__St_3_TurnLeftEnd;
       } else {
         nr_3_St_3_WallFollowing = false;
         ns_3_St_3_WallFollowing = Lab__St_3_WallFollowing;
@@ -1223,19 +1223,19 @@ void Lab__controller_step(float l2, float l1, float m, float r1, float r2,
       self->v_110 = nr_1;
       self->v_89 = ns_1;
       break;
-    case Lab__St_3_TurnRightEnd:
-      right_wheel_St_3_TurnRightEnd = (motorspeed_right_min*turn_right_end_right);
-      left_wheel_St_3_TurnRightEnd = basespeed_left;
-      direction_St_3_TurnRightEnd = 3;
-      st_St_3_TurnRightEnd = Lab__TurnRightEnd;
-      nr_3_St_3_TurnRightEnd = false;
-      ns_3_St_3_TurnRightEnd = Lab__St_3_TurnRightEnd;
-      _out->left_wheel = left_wheel_St_3_TurnRightEnd;
-      _out->right_wheel = right_wheel_St_3_TurnRightEnd;
-      _out->direction = direction_St_3_TurnRightEnd;
-      _out->st = st_St_3_TurnRightEnd;
-      ns_3 = ns_3_St_3_TurnRightEnd;
-      nr_3 = nr_3_St_3_TurnRightEnd;
+    case Lab__St_3_TurnLeftEnd:
+      right_wheel_St_3_TurnLeftEnd = basespeed_left;
+      left_wheel_St_3_TurnLeftEnd = (motorspeed_right_min*turn_right_end_right);
+      direction_St_3_TurnLeftEnd = 3;
+      st_St_3_TurnLeftEnd = Lab__TurnLeftEnd;
+      nr_3_St_3_TurnLeftEnd = false;
+      ns_3_St_3_TurnLeftEnd = Lab__St_3_TurnLeftEnd;
+      _out->left_wheel = left_wheel_St_3_TurnLeftEnd;
+      _out->right_wheel = right_wheel_St_3_TurnLeftEnd;
+      _out->direction = direction_St_3_TurnLeftEnd;
+      _out->st = st_St_3_TurnLeftEnd;
+      ns_3 = ns_3_St_3_TurnLeftEnd;
+      nr_3 = nr_3_St_3_TurnLeftEnd;
       break;
     case Lab__St_3_Stop:
       right_wheel_St_3_Stop = 0.000000;

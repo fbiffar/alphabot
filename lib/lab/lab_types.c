@@ -1,4 +1,4 @@
-/* --- Generated the 8/4/2023 at 11:57 --- */
+/* --- Generated the 8/4/2023 at 12:9 --- */
 /* --- heptagon compiler, version 1.05.00 (compiled thu. jan. 12 12:27:5 CET 2023) --- */
 /* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab.ept --- */
 
@@ -11,8 +11,8 @@ Lab__st_3 Lab__st_3_of_string(char* s) {
   if ((strcmp(s, "St_3_WallFollowing")==0)) {
     return Lab__St_3_WallFollowing;
   };
-  if ((strcmp(s, "St_3_TurnRightEnd")==0)) {
-    return Lab__St_3_TurnRightEnd;
+  if ((strcmp(s, "St_3_TurnLeftEnd")==0)) {
+    return Lab__St_3_TurnLeftEnd;
   };
   if ((strcmp(s, "St_3_Stop")==0)) {
     return Lab__St_3_Stop;
@@ -33,8 +33,8 @@ char* string_of_Lab__st_3(Lab__st_3 x, char* buf) {
     case Lab__St_3_WallFollowing:
       strcpy(buf, "St_3_WallFollowing");
       break;
-    case Lab__St_3_TurnRightEnd:
-      strcpy(buf, "St_3_TurnRightEnd");
+    case Lab__St_3_TurnLeftEnd:
+      strcpy(buf, "St_3_TurnLeftEnd");
       break;
     case Lab__St_3_Stop:
       strcpy(buf, "St_3_Stop");
@@ -211,8 +211,8 @@ Lab__stateName Lab__stateName_of_string(char* s) {
   if ((strcmp(s, "MoveForward")==0)) {
     return Lab__MoveForward;
   };
-  if ((strcmp(s, "TurnRightEnd")==0)) {
-    return Lab__TurnRightEnd;
+  if ((strcmp(s, "TurnLeftEnd")==0)) {
+    return Lab__TurnLeftEnd;
   };
   if ((strcmp(s, "Stop")==0)) {
     return Lab__Stop;
@@ -266,8 +266,8 @@ char* string_of_Lab__stateName(Lab__stateName x, char* buf) {
     case Lab__MoveForward:
       strcpy(buf, "MoveForward");
       break;
-    case Lab__TurnRightEnd:
-      strcpy(buf, "TurnRightEnd");
+    case Lab__TurnLeftEnd:
+      strcpy(buf, "TurnLeftEnd");
       break;
     case Lab__Stop:
       strcpy(buf, "Stop");

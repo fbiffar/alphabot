@@ -58,7 +58,7 @@ float turn_right_end_right = 0.0;
 float basespeed_obstacle = 90;
 
 // line thresholds
-float line_threshold_white = 65.0;
+float line_threshold_white = 70.0;
 float line_threshold_black = 60.0;
 
 // waiting time
@@ -193,7 +193,8 @@ int main(int argc, char **argv)
                               motorspeed_right_max, motorspeed_right_min,
                               Kp, Ki, Kd,
                               d_encoder_steps_left, d_encoder_steps_right,
-                              white_line, line_threshold_white, line_threshold_black, waiting_threshold,
+                              //white_line, 
+                              line_threshold_white, line_threshold_black, waiting_threshold,
                               move_away_right,
                               move_closer_left,
                               right_turn_left,

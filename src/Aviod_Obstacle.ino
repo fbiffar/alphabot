@@ -55,10 +55,10 @@ float left_turn_right = 0.2;
 float right_turn_slow_left = 0.7;
 float left_turn_slow_right = 0.25;
 float turn_right_end_right = 0.1;
-float basespeed_obstacle = 100;
+float basespeed_obstacle = 90;
 
 // line thresholds
-float line_threshold_white = 70.0;
+float line_threshold_white = 65.0;
 float line_threshold_black = 60.0;
 
 // waiting time
@@ -171,11 +171,11 @@ int main(int argc, char **argv)
     // Serial.print("\n");
 
     // Serial.print("\t");
-    // for (int i = 0; i < 5; i++)
-    // {
-    //   Serial.print(TR_sensor[i]);
-    //   Serial.print("\t");
-    // }
+    for (int i = 0; i < 5; i++)
+    {
+      Serial.print(TR_sensor[i]);
+      Serial.print("\t");
+    }
     // Serial.print("\n");
 
     // get encoder values

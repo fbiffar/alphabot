@@ -144,7 +144,7 @@ node controller(l2, l1, m, r1, r2: float;
             state WallFollowing 
                 var
                     front_free, right_front_too_close, right_front_too_far, right_back_too_close, right_back_too_far, right_front_correct, right_back_correct: bool;
-                    last away_from_line: bool;
+                    last away_from_line = false: bool;
                 do  
                     front_free           = ir_front;
                     right_front_too_close = not ir_left_f1; (* and not ir_left_f2 *)
@@ -196,7 +196,7 @@ node controller(l2, l1, m, r1, r2: float;
 
                     state MoveAway
                         do (* turn left with left larger fwd movement *)
-                            away_from_line = false -> pre(away_from_line);
+                            away_from_line =  pre(away_from_line);
                             st = MoveAway;
                             direction   = 2;
                             left_wheel  = motorspeed_left_min +. (basespeed_obstacle -. motorspeed_left_min) *. move_closer_left;
@@ -206,7 +206,7 @@ node controller(l2, l1, m, r1, r2: float;
 
                     state MoveCloser
                         do (* turn right with right larger fwd movement *)
-                            away_from_line = false -> pre(away_from_line);
+                            away_from_line = pre(away_from_line);
                             st = MoveCloser;
                             direction   = 3;
                             left_wheel  = basespeed_obstacle;
@@ -215,7 +215,7 @@ node controller(l2, l1, m, r1, r2: float;
 
                     state RightTurn
                         do (* turn right with left larger fwd movement *)
-                            away_from_line = false -> pre(away_from_line);
+                            away_from_line =pre(away_from_line);
                             st = RightTurn;
                             direction   = 3;
                             left_wheel  = motorspeed_left_min +. (motorspeed_left_max -. motorspeed_left_min) *. right_turn_left;
@@ -224,7 +224,7 @@ node controller(l2, l1, m, r1, r2: float;
 
                     state LeftTurn
                         do (* turn left with right larger fwd movement *)
-                            away_from_line = false -> pre(away_from_line);
+                            away_from_line = pre(away_from_line);
                             st = LeftTurn;
                             direction   = 2;
                             left_wheel  = 0.0;
@@ -233,7 +233,7 @@ node controller(l2, l1, m, r1, r2: float;
 
                     state RightTurnSlow
                         do (* turn right with left slightly larger fwd movement *)
-                            away_from_line = false -> pre(away_from_line);
+                            away_from_line = pre(away_from_line);
                             st = RightTurnSlow;
                             direction   = 3;
                             left_wheel  = motorspeed_left_min +. (motorspeed_left_max -. motorspeed_left_min) *. right_turn_slow_left;
@@ -242,7 +242,7 @@ node controller(l2, l1, m, r1, r2: float;
 
                     state LeftTurnSlow
                         do (* turn left with right slightly larger fwd movement *)
-                            away_from_line = false -> pre(away_from_line);
+                            away_from_line = pre(away_from_line);
                             st = LeftTurnSlow;
                             direction   = 2;
                             left_wheel  = motorspeed_left_min;
@@ -251,14 +251,14 @@ node controller(l2, l1, m, r1, r2: float;
 
                     state MoveForward
                         do (* drive forward *)
-                            away_from_line = false -> pre(away_from_line);
+                            away_from_line = pre(away_from_line);
                             st = MoveForward;
                             direction   = 1;
                             left_wheel  = basespeed_obstacle;
                             right_wheel = basespeed_obstacle;
                     until true then CheckState
                 end
-            until not left_line and away_from_line then TurnRightEnd 
+            until alligned and away_from_line then TurnRightEnd 
 
             state TurnRightEnd
                 do (* turn right until robot is alligned with line *)

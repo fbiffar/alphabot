@@ -42,7 +42,6 @@ node controller(l2, l1, m, r1, r2: float;
                 stop_threshold: float;
                 motorspeed_left_parking, motorspeed_right_parking: float;
                 basespeed_parking:float;
-                basespeed_obstacle: float;
                 last_forward_mm: float)
                 returns (left_wheel, right_wheel: float; direction: int; st: stateName)
     var 
@@ -53,9 +52,6 @@ node controller(l2, l1, m, r1, r2: float;
         last l:float;
         last first_car:bool;
         last car_to_the_right: bool;
-        (*last white_line: bool;*)
-
-
 
     let
         (* check variable whether robot left white line *)
@@ -72,9 +68,6 @@ node controller(l2, l1, m, r1, r2: float;
         l = l1 +. outer_sensor_weight *. l2; (* weighted left  sensors *)
         first_car = false -> (not ir_left_f2 and not white_line) or pre(first_car);
         car_to_the_right = not ir_left_f2;
-        (*white_line = if (r2+l2)/2 >. line_threshold_white and m <. line_threshold_black then false else pre(white_line)*)
-        (*white_line = if (r2+l2)/2 <. line_threshold_black and m >. line_threshold_white then true else pre(white_line)*)
-
 
         
         automaton 
@@ -93,7 +86,7 @@ node controller(l2, l1, m, r1, r2: float;
                             i = error -> (pre(i) +. error);
                             d = error -> (error -. pre(error)); 
                             correction = p*.kP +. i*.kI +. d*.kD;
-                            (* distance of a wheel = (2pi*30mm÷20) * encoder_steps *)
+                            (* distance of one wheel = (2pi*30mm÷20) * encoder_steps *)
                             parking_distance = 0.0 -> if first_car and not car_to_the_right
                                                then pre(parking_distance) +. ((d_encoder_steps_right +. d_encoder_steps_left) /. 2.0) *. 9.425
                                                else 0.0;
@@ -112,7 +105,7 @@ node controller(l2, l1, m, r1, r2: float;
                                           else basespeed_right -. correction);
                             (*white_line = if (r2+l2)/2 >. to_black_threshold and m >. line_threshold_white then false else pre(white_line)*)
                             (*white_line = if (r2+l2)/2 <. to_white_threshold and m <. line_threshold_black then true else pre(white_line)*)
-                       unless left_line then LostLine
+                        unless left_line then LostLine
                     state LostLine
                         do (* failstate: try to move robot back to line *)
                             parking_distance = 0.0 -> pre(parking_distance);
@@ -136,24 +129,24 @@ node controller(l2, l1, m, r1, r2: float;
                     counter     = 0.0 -> pre(counter) +. 1.0;
                     st          = ObstacleFollowing;
                     direction   = 0;
-                    left_wheel  = 0.0;
-                    right_wheel = 0.0;
+                    left_wheel  = motorspeed_left_min;
+                    right_wheel = motorspeed_right_min;
             until counter >=. waiting_threshold and not ir_front then WallFollowing
             | ir_front then LineFollow
 
 
             state WallFollowing 
                 var
-                    front_free, right_front_too_close, right_front_too_far, right_back_too_close, right_back_too_far, right_front_correct, right_back_correct: bool;
+                    front_free, left_front_too_close, left_front_too_far, left_back_too_close, left_back_too_far, left_front_correct, left_back_correct: bool;
 
                 do  
-                    front_free           = ir_front;
-                    right_front_too_close = not ir_left_f1; (* and not ir_left_f2 *)
-                    right_front_too_far   = ir_left_f2;     (* and ir_left_f1 *)
-                    right_front_correct   = not right_front_too_close and not right_front_too_far;
-                    right_back_too_close  = not ir_left_b1; (* and not ir_left_b2 *)
-                    right_back_too_far    = ir_left_b2;     (* and ir_left_b1 *)
-                    right_back_correct    = not right_back_too_close and not right_back_too_far;
+                    front_free           = not ir_front;
+                    left_front_too_close = not ir_left_f1; (* and not ir_left_f2 *)
+                    left_front_too_far   = ir_left_f2;     (* and ir_left_f1 *)
+                    left_front_correct   = not left_front_too_close and not left_front_too_far;
+                    left_back_too_close  = not ir_left_b1; (* and not ir_left_b2 *)
+                    left_back_too_far    = ir_left_b2;     (* and ir_left_b1 *)
+                    left_back_correct    = not left_back_too_close and not left_back_too_far;
 
                 automaton
 
@@ -161,51 +154,50 @@ node controller(l2, l1, m, r1, r2: float;
                         do (* nothing *)    
                             st = Error;
                             direction   = 0;
-                            left_wheel  = 0.0;
-                            right_wheel = 0.0;
+                            left_wheel  = motorspeed_left_min;
+                            right_wheel = motorspeed_right_min;
                     unless not front_free                          then Turn90Left
-                    | right_front_too_close and right_back_too_far   then LeftTurn
-                    | right_front_too_close and right_back_too_close then MoveAway
-                    | right_front_too_far   and right_back_too_close then RightTurn
-                    | right_front_too_far   and right_back_too_far   then MoveCloser
-                    | right_front_correct   and right_back_too_close then RightTurnSlow
-                    | right_front_correct   and right_back_too_far   then LeftTurnSlow
-                    | right_front_too_close and right_back_correct   then LeftTurnSlow
-                    | right_front_too_far   and right_back_correct   then RightTurnSlow
-                    | right_front_correct   and right_back_correct   then MoveForward
+                    | left_front_too_close and left_back_too_close then MoveAway
+                    | left_front_too_close and left_back_too_far   then RightTurn
+                    | left_front_too_far   and left_back_too_close then LeftTurn
+                    | left_front_too_far   and left_back_too_far   then MoveCloser
+                    | left_front_correct   and left_back_too_close then LeftTurnSlow
+                    | left_front_correct   and left_back_too_far   then RightTurnSlow
+                    | left_front_too_close and left_back_correct   then RightTurnSlow
+                    | left_front_too_far   and left_back_correct   then LeftTurnSlow
+                    | left_front_correct   and left_back_correct   then MoveForward
 
                     
                     state Turn90Left 
                         var
-                            sum_encoder_steps:  float;
+                            sum_encoder_steps_right:  float;
                             finished_turn: bool;
                         do (* turn 90° on the left wheel*)
-                            (* sum_encoder_steps  = 0.0 -> pre(sum_encoder_steps) +. (d_encoder_steps_right -. d_encoder_steps_left); *)
-                            sum_encoder_steps  = 0.0 -> pre(sum_encoder_steps) +. d_encoder_steps_right;                           
+                            sum_encoder_steps_right  = 0.0 -> pre(sum_encoder_steps_right) +. d_encoder_steps_right;
                             (* distance for 90° curve = 2*pi/4 * 130mm = 204.2mm *)
-                            (* distance of a wheel = (2pi*30mm÷20) * sum_encoder_steps *)
-                            (*     204.2 < 9.425 * sum_encoder_steps *)
-                            finished_turn = (204.2 -. 20.0)  <. (9.425 *. sum_encoder_steps);
+                            (* distance of a wheel = (2pi*30mm÷20) * sum_encoder_steps_right *)
+                            (*     204.2 < 9.425 * sum_encoder_steps_right *)
+                            finished_turn = 204.2 <. (9.425 *. sum_encoder_steps_right);
                             st            = Turn90Left;
                             direction     = 3;
-                            left_wheel    = 0.0;
-                            right_wheel   = basespeed_obstacle;
+                            left_wheel    = basespeed_left;
+                            right_wheel   = motorspeed_right_min;
                     until finished_turn then CheckState
 
                     state MoveAway
-                        do (* turn left with left larger fwd movement *)
+                        do (* turn right with left larger fwd movement *)
                             st = MoveAway;
-                            direction   = 2;
-                            left_wheel  = motorspeed_left_min +. (basespeed_obstacle -. motorspeed_left_min) *. move_closer_left;
-                            right_wheel = basespeed_obstacle;
+                            direction   = 3;
+                            left_wheel  = basespeed_left;
+                            right_wheel = motorspeed_right_min +. (basespeed_right -. motorspeed_right_min) *. move_away_right;
                     until true then CheckState
 
                     state MoveCloser
-                        do (* turn right with right larger fwd movement *)
+                        do (* turn left with right larger fwd movement *)
                             st = MoveCloser;
-                            direction   = 3;
-                            left_wheel  = basespeed_obstacle;
-                            right_wheel = motorspeed_right_min *. move_away_right;
+                            direction   = 2;
+                            left_wheel  = motorspeed_left_min +. (basespeed_left -. motorspeed_left_min) *. move_closer_left;
+                            right_wheel = basespeed_right;
                     until true then CheckState
 
                     state RightTurn
@@ -213,28 +205,28 @@ node controller(l2, l1, m, r1, r2: float;
                             st = RightTurn;
                             direction   = 3;
                             left_wheel  = motorspeed_left_min +. (motorspeed_left_max -. motorspeed_left_min) *. right_turn_left;
-                            right_wheel = 0.0;
+                            right_wheel = motorspeed_right_min;
                     until true then CheckState
 
                     state LeftTurn
                         do (* turn left with right larger fwd movement *)
                             st = LeftTurn;
                             direction   = 2;
-                            left_wheel  = 0.0;
+                            left_wheel  = motorspeed_left_min;
                             right_wheel = motorspeed_right_min +. (motorspeed_right_max -. motorspeed_right_min) *. left_turn_right;
                     until true then CheckState
 
                     state RightTurnSlow
                         do (* turn right with left slightly larger fwd movement *)
-                            st = RightTurnSlow;
+                            st = RightTurn;
                             direction   = 3;
                             left_wheel  = motorspeed_left_min +. (motorspeed_left_max -. motorspeed_left_min) *. right_turn_slow_left;
-                            right_wheel = 0.0;
+                            right_wheel = motorspeed_right_min;
                     until true then CheckState
 
                     state LeftTurnSlow
                         do (* turn left with right slightly larger fwd movement *)
-                            st = LeftTurnSlow;
+                            st = LeftTurn;
                             direction   = 2;
                             left_wheel  = motorspeed_left_min;
                             right_wheel = motorspeed_right_min +. (motorspeed_right_max -. motorspeed_right_min) *. left_turn_slow_right;
@@ -244,8 +236,8 @@ node controller(l2, l1, m, r1, r2: float;
                         do (* drive forward *)
                             st = MoveForward;
                             direction   = 1;
-                            left_wheel  = basespeed_obstacle;
-                            right_wheel = basespeed_obstacle;
+                            left_wheel  = basespeed_left;
+                            right_wheel = basespeed_right;
                     until true then CheckState
                 end
             until not left_line then TurnRightEnd 

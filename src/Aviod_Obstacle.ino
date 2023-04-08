@@ -49,7 +49,7 @@ float motorspeed_right_min = 60;
 
 // obstacle avoidance
 float move_away_right = 0;
-float move_closer_left = -1.0;
+float move_closer_left = 0.0;
 float right_turn_left = 0.6;
 float left_turn_right = 0.2;
 float right_turn_slow_left = 0.7;

@@ -33,6 +33,7 @@ node controller(l2, l1, m, r1, r2: float;
                 d_encoder_steps_left, d_encoder_steps_right: float;
                 (* white_line: bool; *)
                 line_threshold_white, line_threshold_black: float;  (* over line_threshold is the white line lost *)
+                tcross_threshold_white: float;
                 (* to_black_threshold, to_white_threshold: float; *)
                 (*ab hier neue variablen*)
                 waiting_threshold: float;
@@ -53,7 +54,7 @@ node controller(l2, l1, m, r1, r2: float;
         last l:float;
         last first_car:bool;
         last car_to_the_right: bool;
-        last white_line: bool = false;
+        last white_line: bool = true;
         last white_t_cross: bool;
 
 
@@ -61,8 +62,8 @@ node controller(l2, l1, m, r1, r2: float;
     let
         (* check variable whether robot left white line *)
         left_line = if white_line
-                    then (l2 <. line_threshold_white) and (l1 <. line_threshold_white) and (m <. line_threshold_white) and (r1 <. line_threshold_white) and (r2 <. line_threshold_white)
-                    else (l2 >. line_threshold_black) and (l1 >. line_threshold_black) and (m >. line_threshold_black) and (r1 >. line_threshold_black) and (r2 >. line_threshold_black);
+                    then (l2 <. line_threshold_black) and (l1 <. line_threshold_black) and (m <. line_threshold_black) and (r1 <. line_threshold_black) and (r2 <. line_threshold_black)
+                    else (l2 >. line_threshold_white) and (l1 >. line_threshold_white) and (m >. line_threshold_white) and (r1 >. line_threshold_white) and (r2 >. line_threshold_white);
         (* check variable whether robot left white line *)
         left_m = if white_line then (m <. line_threshold_white) else (m >. line_threshold_black);
         (* check variable whether robot is again on the white line *)
@@ -76,7 +77,7 @@ node controller(l2, l1, m, r1, r2: float;
         white_line = if last white_line = true 
                      then (if r2 >. line_threshold_white and l2 >. line_threshold_white and m <. line_threshold_black then false else (last white_line))
                      else (if r2 <. line_threshold_black and l2 <. line_threshold_black and m >. line_threshold_white then true  else (last white_line));
-        white_t_cross = (l2 >. line_threshold_white) and (l1 >. line_threshold_white) and (m >. line_threshold_white) and (r1 >. line_threshold_white) and (r2 >. line_threshold_white) and white_line;
+        white_t_cross = (l2 >. tcross_threshold_white) and (l1 >. tcross_threshold_white) and (m >. tcross_threshold_white) and (r1 >. tcross_threshold_white) and (r2 >. tcross_threshold_white) and white_line;
 
 
         
@@ -133,13 +134,14 @@ node controller(l2, l1, m, r1, r2: float;
                             direction   = 2;
                             left_wheel  = 0.0;
                             right_wheel = basespeed_right; 
-                    until counter > 4 then OnLine
+                    until counter > 10 then OnLine
                 end
             (* robot is on black line and parking process starts *)
             until  white_line = false and parking_distance >=. min_parking_space then Parking
-            |      white_line = false and (l1 >. stop_threshold) and (m >. stop_threshold)  and (r1 >. stop_threshold) then Stop
+            |      white_line = false and (l2 >. stop_threshold) and(l1 >. stop_threshold) and (m >. stop_threshold)  and (r1 >. stop_threshold) and (r2 >. stop_threshold) then Stop
             (* change state if robot detects an obstale in front *)
             unless white_line = true  and not ir_front then ObstacleFollowing
+            | white_t_cross then Stop
 
             state ObstacleFollowing
                 var
@@ -270,7 +272,7 @@ node controller(l2, l1, m, r1, r2: float;
                             right_wheel = basespeed_obstacle;
                     until true then CheckState
                 end
-            until back_online and diff_steps >. 30.0 then TurnLeftEnd 
+            until back_online and diff_steps >. 25.0 then TurnLeftEnd 
 
             state TurnLeftEnd
                 var 
@@ -278,11 +280,11 @@ node controller(l2, l1, m, r1, r2: float;
                     finished_turn: bool;
                 do (* turn right until robot is alligned with line *)
                     sum_encoder_steps  = 0.0 -> pre(sum_encoder_steps) +. d_encoder_steps_right;       
-                    finished_turn = (204.2 ) <. (9.425 *. sum_encoder_steps);
+                    finished_turn = (200.0) <. (9.425 *. sum_encoder_steps);
                     st = TurnLeftEnd;
                     direction   = 3;
                     left_wheel  = motorspeed_right_min*. turn_right_end_right;
-                    right_wheel = basespeed_obstacle;
+                    right_wheel = basespeed_right;
             until finished_turn then LineFollow
 
             state Stop

@@ -1,4 +1,4 @@
-/* --- Generated the 8/4/2023 at 16:56 --- */
+/* --- Generated the 9/4/2023 at 10:6 --- */
 /* --- heptagon compiler, version 1.05.00 (compiled tue. jan. 10 17:5:19 CET 2023) --- */
 /* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab.ept --- */
 
@@ -36,6 +36,7 @@ int main(int argc, char** argv) {
   float d_encoder_steps_right;
   float line_threshold_white;
   float line_threshold_black;
+  float tcross_threshold_white;
   float waiting_threshold;
   float move_away_right;
   float move_closer_left;
@@ -162,6 +163,10 @@ int main(int argc, char** argv) {
       return 0;
     };;
     
+    if ((scanf("%f", &tcross_threshold_white)==EOF)) {
+      return 0;
+    };;
+    
     if ((scanf("%f", &waiting_threshold)==EOF)) {
       return 0;
     };;
@@ -228,13 +233,14 @@ int main(int argc, char** argv) {
                          motorspeed_right_max, motorspeed_right_min, kP, kI,
                          kD, d_encoder_steps_left, d_encoder_steps_right,
                          line_threshold_white, line_threshold_black,
-                         waiting_threshold, move_away_right,
-                         move_closer_left, right_turn_left, left_turn_right,
-                         right_turn_slow_left, left_turn_slow_right,
-                         turn_right_end_right, min_parking_space,
-                         stop_threshold, motorspeed_left_parking,
-                         motorspeed_right_parking, basespeed_parking,
-                         basespeed_obstacle, last_forward_mm, &_res, &mem);
+                         tcross_threshold_white, waiting_threshold,
+                         move_away_right, move_closer_left, right_turn_left,
+                         left_turn_right, right_turn_slow_left,
+                         left_turn_slow_right, turn_right_end_right,
+                         min_parking_space, stop_threshold,
+                         motorspeed_left_parking, motorspeed_right_parking,
+                         basespeed_parking, basespeed_obstacle,
+                         last_forward_mm, &_res, &mem);
     printf("%f\n", _res.left_wheel);
     printf("%f\n", _res.right_wheel);
     printf("%d\n", _res.direction);

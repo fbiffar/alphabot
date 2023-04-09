@@ -1,4 +1,4 @@
-/* --- Generated the 8/4/2023 at 16:56 --- */
+/* --- Generated the 9/4/2023 at 10:6 --- */
 /* --- heptagon compiler, version 1.05.00 (compiled tue. jan. 10 17:5:19 CET 2023) --- */
 /* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab.ept --- */
 
@@ -8,36 +8,36 @@
 #include "lab_types.h"
 typedef struct Lab__controller_mem {
   Lab__st_3 ck;
-  Lab__st_2 v_63;
-  float v_67;
-  int v_64;
-  float v_73;
-  int v_70;
-  int v_76;
-  float v_79;
-  int v_77;
-  Lab__st_1 v_127;
-  int v_144;
-  float v_141;
-  int v_138;
-  int v_148;
-  int v_94;
+  Lab__st_2 v_65;
+  float v_69;
+  int v_66;
+  float v_75;
+  int v_72;
+  int v_78;
+  float v_81;
+  int v_79;
+  Lab__st_1 v_129;
+  int v_146;
+  float v_143;
+  int v_140;
+  int v_150;
+  int v_96;
   float diff_steps_1;
   int away_from_line_1;
-  float v_156;
-  int v_154;
-  Lab__st v_173;
-  int v_178;
-  int v_175;
-  float v_183;
-  int v_180;
-  float v_209;
-  int v_204;
-  float v_198;
-  int v_195;
-  float v_193;
-  int v_190;
-  int v_227;
+  float v_158;
+  int v_156;
+  Lab__st v_179;
+  int v_184;
+  int v_181;
+  float v_189;
+  int v_186;
+  float v_215;
+  int v_210;
+  float v_204;
+  int v_201;
+  float v_199;
+  int v_196;
+  int v_233;
   float parking_distance_1;
   int v_36;
   int v_32;
@@ -75,6 +75,7 @@ void Lab__controller_step(float l2, float l1, float m, float r1, float r2,
                           float d_encoder_steps_right,
                           float line_threshold_white,
                           float line_threshold_black,
+                          float tcross_threshold_white,
                           float waiting_threshold, float move_away_right,
                           float move_closer_left, float right_turn_left,
                           float left_turn_right, float right_turn_slow_left,

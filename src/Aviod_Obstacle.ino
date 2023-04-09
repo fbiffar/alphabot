@@ -24,9 +24,9 @@ float d_encoder_steps_left;
 float d_encoder_steps_right;
 
 // PID Controller
-float Kp = 30;
-float Kd = 25;
-float Ki = 0.05;
+float Kp = 300; //30
+float Kd = 480; //140
+float Ki = 0.0006;
 
 // TR Sensor Tuning
 float outer_sensors_weight = 2;
@@ -39,27 +39,28 @@ unsigned int IR_sensor[5] = {0, 0, 0, 0, 0};
 int white_line = 1;
 
 // tuning motor
-float backward_factor = 0.26;
-float basespeed_left = 100;
-float basespeed_right = 100;
-float motorspeed_left_max = 200;
-float motorspeed_left_min = 60;
-float motorspeed_right_max = 200;
-float motorspeed_right_min = 60;
+float backward_factor = 0.37; //0.26
+float basespeed_left = 40; //100
+float basespeed_right = 40; //100
+float motorspeed_left_max = 150; //200
+float motorspeed_left_min = 0; //60
+float motorspeed_right_max = 150; //200
+float motorspeed_right_min = 0; //60
 
 // obstacle avoidance
 float move_away_right = 0;
 float move_closer_left = 0.0;
-float right_turn_left = 0.6;
+float right_turn_left = 0.7;
 float left_turn_right = 0.2;
 float right_turn_slow_left = 0.7;
 float left_turn_slow_right = 0.25;
-float turn_right_end_right = 0.0;
-float basespeed_obstacle = 90;
+float turn_right_end_right = 0.8;
+float basespeed_obstacle = 100;
 
 // line thresholds
-float line_threshold_white = 70.0;
-float line_threshold_black = 60.0;
+float line_threshold_white = 55.0;
+float line_threshold_black = 50.0;
+float tcross_threshold_white = 70.0;
 
 // waiting time
 float waiting_threshold = 1000;
@@ -69,7 +70,7 @@ float waiting_threshold = 1000;
 // parking
 
 float min_parking_space = 200;
-float stop_threshold = 1000;
+float stop_threshold = 500;
 float motorspeed_left_parking = 80;
 float motorspeed_right_parking = 60;
 float basespeed_parking = 80;
@@ -194,7 +195,8 @@ int main(int argc, char **argv)
                               Kp, Ki, Kd,
                               d_encoder_steps_left, d_encoder_steps_right,
                               //white_line, 
-                              line_threshold_white, line_threshold_black, waiting_threshold,
+                              line_threshold_white, line_threshold_black, tcross_threshold_white,
+                              waiting_threshold,
                               move_away_right,
                               move_closer_left,
                               right_turn_left,

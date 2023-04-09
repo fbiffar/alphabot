@@ -1,5 +1,5 @@
-/* --- Generated the 8/4/2023 at 16:56 --- */
-/* --- heptagon compiler, version 1.05.00 (compiled tue. jan. 10 17:5:19 CET 2023) --- */
+/* --- Generated the 9/4/2023 at 11:8 --- */
+/* --- heptagon compiler, version 1.05.00 (compiled thu. jan. 12 12:27:5 CET 2023) --- */
 /* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab.ept --- */
 
 #ifndef LAB_H
@@ -26,18 +26,18 @@ typedef struct Lab__controller_mem {
   int away_from_line_1;
   float v_156;
   int v_154;
-  Lab__st v_173;
-  int v_178;
-  int v_175;
-  float v_183;
-  int v_180;
-  float v_209;
-  int v_204;
-  float v_198;
-  int v_195;
-  float v_193;
-  int v_190;
-  int v_227;
+  Lab__st v_177;
+  int v_182;
+  int v_179;
+  float v_187;
+  int v_184;
+  float v_213;
+  int v_208;
+  float v_202;
+  int v_199;
+  float v_197;
+  int v_194;
+  int v_231;
   float parking_distance_1;
   int v_36;
   int v_32;
@@ -75,6 +75,7 @@ void Lab__controller_step(float l2, float l1, float m, float r1, float r2,
                           float d_encoder_steps_right,
                           float line_threshold_white,
                           float line_threshold_black,
+                          float tcross_threshold_white,
                           float waiting_threshold, float move_away_right,
                           float move_closer_left, float right_turn_left,
                           float left_turn_right, float right_turn_slow_left,

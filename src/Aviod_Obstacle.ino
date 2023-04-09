@@ -25,7 +25,7 @@ float d_encoder_steps_right;
 
 // PID Controller
 float Kp = 30;
-float Kd = 25;
+float Kd = 150;
 float Ki = 0.05;
 
 // TR Sensor Tuning
@@ -39,13 +39,13 @@ unsigned int IR_sensor[5] = {0, 0, 0, 0, 0};
 int white_line = 1;
 
 // tuning motor
-float backward_factor = 0.26;
+float backward_factor = 0.5;
 float basespeed_left = 100;
 float basespeed_right = 100;
 float motorspeed_left_max = 200;
-float motorspeed_left_min = 60;
+float motorspeed_left_min = 0;
 float motorspeed_right_max = 200;
-float motorspeed_right_min = 60;
+float motorspeed_right_min = 0;
 
 // obstacle avoidance
 float move_away_right = 0;
@@ -64,7 +64,7 @@ float line_threshold_black = 60.0;
 // waiting time
 float waiting_threshold = 1000;
 
-//obstacle 
+// obstacle
 
 // parking
 
@@ -75,65 +75,100 @@ float motorspeed_right_parking = 60;
 float basespeed_parking = 80;
 float last_forward_mm = 50;
 
-
-int print_enum( Lab__stateName state)
+int print_enum(Lab__stateName state)
 {
   switch (state)
   {
   case Lab__OnLine:
-    {Serial.print("OnLine");
-    break;}
+  {
+    Serial.print("OnLine");
+    break;
+  }
   case Lab__LostLine:
-    {Serial.print("LostLine");
-    break;}
+  {
+    Serial.print("LostLine");
+    break;
+  }
   case Lab__ObstacleFollowing:
-    {Serial.print("ObstacleFollowing");
-    break;}
+  {
+    Serial.print("ObstacleFollowing");
+    break;
+  }
   case Lab__Error:
-    {Serial.print("Error");
-    break;}
+  {
+    Serial.print("Error");
+    break;
+  }
   case Lab__Turn90Right:
-    {Serial.print("Turn90Right");
-    break;}
+  {
+    Serial.print("Turn90Right");
+    break;
+  }
   case Lab__Turn90Left:
-    {Serial.print("Turn90Left");
-    break;}
+  {
+    Serial.print("Turn90Left");
+    break;
+  }
   case Lab__MoveAway:
-    {Serial.print("MoveAway");
-    break;}
+  {
+    Serial.print("MoveAway");
+    break;
+  }
   case Lab__MoveCloser:
-    {Serial.print("MoveCloser");
-    break;}
+  {
+    Serial.print("MoveCloser");
+    break;
+  }
   case Lab__LeftTurn:
-    {Serial.print("LeftTurn");
-    break;}
+  {
+    Serial.print("LeftTurn");
+    break;
+  }
   case Lab__RightTurn:
-    {Serial.print("RightTurn");
-    break;}
+  {
+    Serial.print("RightTurn");
+    break;
+  }
   case Lab__LeftTurnSlow:
-    {Serial.print("LeftTurnSlow");
-    break;}
+  {
+    Serial.print("LeftTurnSlow");
+    break;
+  }
   case Lab__RightTurnSlow:
-    {Serial.print("RightTurnSlow");
-    break;}
+  {
+    Serial.print("RightTurnSlow");
+    break;
+  }
   case Lab__MoveForward:
-    {Serial.print("MoveForward");
-    break;}
+  {
+    Serial.print("MoveForward");
+    break;
+  }
   case Lab__TurnLeftEnd:
-    {Serial.print("TurnLeftEnd");
-    break;}
+  {
+    Serial.print("TurnLeftEnd");
+    break;
+  }
   case Lab__Stop:
-    {Serial.print("Stop");
-    break;}
+  {
+    Serial.print("Stop");
+    break;
+  }
   case Lab__Backwards:
-    {Serial.print("Backwards");
-    break;}
+  {
+    Serial.print("Backwards");
+    break;
+  }
   case Lab__Forward:
-    {Serial.print("Forward ");
-    break;}
+  {
+    Serial.print("Forward ");
+    break;
+  }
   default:
-    {Serial.print("noState");
-    break;}
+  {
+    Serial.print("noState");
+    break;
+  }
   }
   return 0;
 }
@@ -186,31 +221,31 @@ int main(int argc, char **argv)
 
     // run heptagon code
     Lab__controller_step((float)TR_sensor[0], (float)TR_sensor[1], (float)TR_sensor[2], (float)TR_sensor[3], (float)TR_sensor[4], // (float l2, float l1, float m, float r1, float r2
-                              (int)IR_sensor[0], (int)IR_sensor[1], (int)IR_sensor[2], (int)IR_sensor[3], (int)IR_sensor[4],           // int ir_front, int ir_left_f1, int ir_left_f2,int ir_left_b1, int ir_left_b2,
-                              outer_sensors_weight,
-                              backward_factor, basespeed_left, basespeed_right,
-                              motorspeed_left_max, motorspeed_left_min,
-                              motorspeed_right_max, motorspeed_right_min,
-                              Kp, Ki, Kd,
-                              d_encoder_steps_left, d_encoder_steps_right,
-                              //white_line, 
-                              line_threshold_white, line_threshold_black, waiting_threshold,
-                              move_away_right,
-                              move_closer_left,
-                              right_turn_left,
-                              left_turn_right,
-                              right_turn_slow_left,
-                              left_turn_slow_right,
-                              turn_right_end_right,
-                              min_parking_space,
-                              stop_threshold,
-                              motorspeed_left_parking,
-                              motorspeed_right_parking,
-                              basespeed_parking,
-                              basespeed_obstacle,
-                              last_forward_mm,
-                              &_out,
-                              &mem);
+                         (int)IR_sensor[0], (int)IR_sensor[1], (int)IR_sensor[2], (int)IR_sensor[3], (int)IR_sensor[4],           // int ir_front, int ir_left_f1, int ir_left_f2,int ir_left_b1, int ir_left_b2,
+                         outer_sensors_weight,
+                         backward_factor, basespeed_left, basespeed_right,
+                         motorspeed_left_max, motorspeed_left_min,
+                         motorspeed_right_max, motorspeed_right_min,
+                         Kp, Ki, Kd,
+                         d_encoder_steps_left, d_encoder_steps_right,
+                         // white_line,
+                         line_threshold_white, line_threshold_black, waiting_threshold,
+                         move_away_right,
+                         move_closer_left,
+                         right_turn_left,
+                         left_turn_right,
+                         right_turn_slow_left,
+                         left_turn_slow_right,
+                         turn_right_end_right,
+                         min_parking_space,
+                         stop_threshold,
+                         motorspeed_left_parking,
+                         motorspeed_right_parking,
+                         basespeed_parking,
+                         basespeed_obstacle,
+                         last_forward_mm,
+                         &_out,
+                         &mem);
 
     // extract output
     int LS = (int)_out.left_wheel;

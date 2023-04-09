@@ -8,4 +8,7 @@ In this project was the goal to develop an algorithm  that made the robo fullfil
 4. Once robot enters into the parking area, it has to detect sufficient space to park itself.
 5. If space is not available for the parking, robot should stop at the EXIT position marked on the arena.
 
+If you want to see our bot please click on this Link:
+https://youtu.be/FTQqFt0I2qk
+
 ![Alt text](/VP_Final.png)

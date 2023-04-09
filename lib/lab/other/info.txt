@@ -1,6 +1,0 @@
-generate c code:
-/usr/local/bin/heptc -target c -s controller -hepts lab.ept
-
-test heptagon code
-./simulate.sh -s controller -p lab.ept
-./simulate.sh -s controller -p lab.ept -c1 < test_in-outputs/linefollowing.in > test_in-outputs/loeschen.out

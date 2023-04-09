@@ -1,4 +1,4 @@
-/* --- Generated the 9/4/2023 at 11:8 --- */
+/* --- Generated the 9/4/2023 at 13:31 --- */
 /* --- heptagon compiler, version 1.05.00 (compiled thu. jan. 12 12:27:5 CET 2023) --- */
 /* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab.ept --- */
 
@@ -58,9 +58,6 @@ Lab__st_2 Lab__st_2_of_string(char* s) {
   if ((strcmp(s, "St_2_Turn90Right")==0)) {
     return Lab__St_2_Turn90Right;
   };
-  if ((strcmp(s, "St_2_Forward")==0)) {
-    return Lab__St_2_Forward;
-  };
   if ((strcmp(s, "St_2_Backwards")==0)) {
     return Lab__St_2_Backwards;
   };
@@ -70,9 +67,6 @@ char* string_of_Lab__st_2(Lab__st_2 x, char* buf) {
   switch (x) {
     case Lab__St_2_Turn90Right:
       strcpy(buf, "St_2_Turn90Right");
-      break;
-    case Lab__St_2_Forward:
-      strcpy(buf, "St_2_Forward");
       break;
     case Lab__St_2_Backwards:
       strcpy(buf, "St_2_Backwards");

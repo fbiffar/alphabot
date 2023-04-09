@@ -51,15 +51,16 @@ float motorspeed_right_min = 0;
 float move_away_right = 0;
 float move_closer_left = 0.0;
 float right_turn_left = 0.6;
-float left_turn_right = 0.2;
+float left_turn_right = 0.3; // 0.2;
 float right_turn_slow_left = 0.7;
-float left_turn_slow_right = 0.25;
-float turn_right_end_right = 0.0;
-float basespeed_obstacle = 90;
+float left_turn_slow_right = 0.35; // 0.25;
+float turn_right_end_right = 0.9;
+float basespeed_obstacle = 95;
 
 // line thresholds
 float line_threshold_white = 70.0;
 float line_threshold_black = 60.0;
+float tcross_threshold_white = 100.0;
 
 // waiting time
 float waiting_threshold = 1000;
@@ -68,12 +69,12 @@ float waiting_threshold = 1000;
 
 // parking
 
-float min_parking_space = 200;
-float stop_threshold = 1000;
-float motorspeed_left_parking = 80;
+float min_parking_space = 150;
+float stop_threshold = 50;
+float motorspeed_left_parking = 90;
 float motorspeed_right_parking = 60;
-float basespeed_parking = 80;
-float last_forward_mm = 50;
+float basespeed_parking = 100;
+float last_forward_mm = 100;
 
 int print_enum(Lab__stateName state)
 {
@@ -229,7 +230,8 @@ int main(int argc, char **argv)
                          Kp, Ki, Kd,
                          d_encoder_steps_left, d_encoder_steps_right,
                          // white_line,
-                         line_threshold_white, line_threshold_black, waiting_threshold,
+                         line_threshold_white, line_threshold_black, tcross_threshold_white,
+                         waiting_threshold,
                          move_away_right,
                          move_closer_left,
                          right_turn_left,

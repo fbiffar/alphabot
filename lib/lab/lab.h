@@ -1,4 +1,4 @@
-/* --- Generated the 9/4/2023 at 11:8 --- */
+/* --- Generated the 9/4/2023 at 13:31 --- */
 /* --- heptagon compiler, version 1.05.00 (compiled thu. jan. 12 12:27:5 CET 2023) --- */
 /* --- Command line: /usr/local/bin/heptc -target c -s controller -hepts lab.ept --- */
 
@@ -8,11 +8,11 @@
 #include "lab_types.h"
 typedef struct Lab__controller_mem {
   Lab__st_3 ck;
-  Lab__st_2 v_63;
-  float v_67;
-  int v_64;
-  float v_73;
-  int v_70;
+  float v_66;
+  int v_63;
+  float v_72;
+  int v_69;
+  Lab__st_2 v_75;
   int v_76;
   float v_79;
   int v_77;

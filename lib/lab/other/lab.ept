@@ -56,8 +56,6 @@ node controller(l2, l1, m, r1, r2: float;
         last white_line: bool = true;
         last white_t_cross: bool;
 
-
-
     let
         (* check variable whether robot left white line *)
         left_line = if white_line
@@ -136,7 +134,7 @@ node controller(l2, l1, m, r1, r2: float;
                 end
             (* robot is on black line and parking process starts *)
             until  white_line = false and parking_distance >=. min_parking_space then Parking
-            |      white_line = false and (l2 >. stop_threshold) and(l1 >. stop_threshold) and (m >. stop_threshold)  and (r1 >. stop_threshold) and (r2 >. stop_threshold) then Stop
+            |      white_line = false and (l2 <. stop_threshold) and(l1 <. stop_threshold) and (m <. stop_threshold)  and (r1 <. stop_threshold) and (r2 <. stop_threshold) then Stop
             (* change state if robot detects an obstale in front *)
             unless white_line = true  and not ir_front then ObstacleFollowing
 
@@ -296,14 +294,7 @@ node controller(l2, l1, m, r1, r2: float;
                     finished_move: bool;
                 do (* park *)
                 automaton 
-                    state Backwards
-                        do (* failstate: try to move robot back to line *)
-                            finished_move = false;
-                            st          = Backwards;
-                            direction   = 4;
-                            left_wheel  = basespeed_parking;
-                            right_wheel = basespeed_parking;
-                    unless car_to_the_right then Turn90Right
+                    
                     
                     state Turn90Right 
                         var
@@ -316,27 +307,28 @@ node controller(l2, l1, m, r1, r2: float;
                             (* distance of a wheel = (2pi*30mm÷20) * sum_encoder_steps_left *)
                             (*     204.2 < 9.425 * sum_encoder_steps_left *)
                             (* <=> 20 < sum_encoder_steps_left *)
-                            finished_turn = 204.2 <. (9.425 *. sum_encoder_steps_left);
+                            finished_turn = 150.2 <. (9.425 *. sum_encoder_steps_left);
                             st            = Turn90Right;
-                            direction     = 3;
+                            direction     = 4;
                             left_wheel    = motorspeed_left_parking;
-                            right_wheel   = motorspeed_right_parking;
-                    until finished_turn then Forward 
-
-                    state Forward 
+                            right_wheel   = 0.0;
+                    until finished_turn then Backwards 
+                    state Backwards
                         var
-                            sum_encoder_steps_left:  float;
-                        do (* turn 90° on the right wheel*)
+                            sum_encoder_steps_left: float;
+                        do (* failstate: try to move robot back to line *)
                             sum_encoder_steps_left  = 0.0 -> pre(sum_encoder_steps_left) +. d_encoder_steps_left;
                             (* distance for 90° curve = 2*pi/4 * 130mm = 204.2mm *)
                             (* distance of a wheel = (2pi*30mm÷20) * sum_encoder_steps_left *)
                             (*     204.2 < 9.425 * sum_encoder_steps_left *)
                             (* <=> 20 < sum_encoder_steps_left *)
                             finished_move = last_forward_mm <. (9.425 *. sum_encoder_steps_left);
-                            st            = Forward;
-                            direction     = 3;
-                            left_wheel    = basespeed_parking;
-                            right_wheel   = basespeed_parking;
+                            st          = Backwards;
+                            direction   = 4;
+                            left_wheel  = basespeed_parking;
+                            right_wheel = basespeed_parking+.10.0;
+
+                    
                 end
             until finished_move then Stop  
         end
